@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import { type LucideIcon } from "lucide-react";
+import { usePathname } from 'next/navigation';
+import { type LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+  SidebarMenuItem
+} from '@/components/ui/sidebar';
 
 export function KallioActions({
-  kallio,
+  kallio
 }: {
   kallio: {
     name: string;

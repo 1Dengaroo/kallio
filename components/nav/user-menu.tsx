@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   SignUpButton,
@@ -6,11 +6,11 @@ import {
   SignedIn,
   useUser,
   SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
-import { SidebarMenuButton } from "../ui/sidebar";
-import { LogIn, UserPlus } from "lucide-react";
-import { dark } from "@clerk/themes";
+  UserButton
+} from '@clerk/nextjs';
+import { SidebarMenuButton } from '../ui/sidebar';
+import { LogIn, UserPlus } from 'lucide-react';
+import { dark } from '@clerk/themes';
 
 export function UserMenu() {
   const user = useUser();
@@ -39,12 +39,12 @@ export function UserMenu() {
         <div className="flex items-center gap-3 px-2 py-2">
           <UserButton
             appearance={{
-              baseTheme: dark,
+              baseTheme: dark
             }}
           />
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-medium truncate">
-              {user.user?.fullName || user.user?.firstName || "User"}
+              {user.user?.fullName || user.user?.firstName || 'User'}
             </span>
             <span className="text-xs text-muted-foreground truncate">
               {user.user?.primaryEmailAddress?.emailAddress}

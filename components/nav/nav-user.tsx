@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   BadgeCheck,
@@ -7,11 +7,11 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-  LogIn,
-} from "lucide-react";
-import { useUser, useClerk } from "@clerk/nextjs";
+  LogIn
+} from 'lucide-react';
+import { useUser, useClerk } from '@clerk/nextjs';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,15 +19,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { shadcn } from "@clerk/themes";
+  useSidebar
+} from '@/components/ui/sidebar';
+import { shadcn } from '@clerk/themes';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -35,7 +35,7 @@ export function NavUser() {
   const { signOut, openUserProfile, openSignIn } = useClerk();
 
   const appearance = {
-    baseTheme: shadcn,
+    baseTheme: shadcn
   };
 
   if (!isLoaded) {
@@ -79,14 +79,14 @@ export function NavUser() {
     );
   }
 
-  const userName = user.fullName || user.username || "User";
-  const userEmail = user.primaryEmailAddress?.emailAddress || "";
-  const userAvatar = user.imageUrl || "";
+  const userName = user.fullName || user.username || 'User';
+  const userEmail = user.primaryEmailAddress?.emailAddress || '';
+  const userAvatar = user.imageUrl || '';
 
   const initials = userName
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
+    .join('')
     .toUpperCase()
     .slice(0, 2);
 
@@ -122,7 +122,7 @@ export function NavUser() {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >

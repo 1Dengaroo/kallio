@@ -1,11 +1,11 @@
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 interface ImageLoadingProps {
   message?: string;
 }
 
 export function ImageLoading({
-  message = "Loading images...",
+  message = 'Loading images...'
 }: ImageLoadingProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center">

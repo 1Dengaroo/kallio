@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 import Dropzone, {
   type DropzoneProps,
   type FileRejection
-} from "react-dropzone";
-import { cn } from "@/lib/utils";
-import { PlusIcon } from "lucide-react";
+} from 'react-dropzone';
+import { cn } from '@/lib/utils';
+import { PlusIcon } from 'lucide-react';
 
 interface DroppableProps extends React.HTMLAttributes<HTMLDivElement> {
   onValueChange?: (files: File[]) => void;
-  accept?: DropzoneProps["accept"];
-  maxSize?: DropzoneProps["maxSize"];
-  maxFileCount?: DropzoneProps["maxFiles"];
+  accept?: DropzoneProps['accept'];
+  maxSize?: DropzoneProps['maxSize'];
+  maxFileCount?: DropzoneProps['maxFiles'];
   multiple?: boolean;
   disabled?: boolean;
   children?: React.ReactNode;
@@ -20,7 +20,7 @@ export function Droppable(props: DroppableProps) {
   const {
     onValueChange,
     accept = {
-      "image/*": []
+      'image/*': []
     },
     maxSize = 1024 * 1024 * 2,
     maxFileCount = 1,
@@ -58,8 +58,8 @@ export function Droppable(props: DroppableProps) {
         <div
           {...getRootProps()}
           className={cn(
-            "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            disabled && "pointer-events-none opacity-60",
+            'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            disabled && 'pointer-events-none opacity-60',
             className
           )}
           {...dropzoneProps}

@@ -11,111 +11,111 @@ import {
   Video,
   Image,
   Music,
-  Type,
-} from "lucide-react";
+  Type
+} from 'lucide-react';
 
 const sidebarData = {
   teams: [
     {
-      name: "Kallio Marketing",
+      name: 'Kallio Marketing',
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: 'Enterprise'
     },
     {
-      name: "Kallio Development",
+      name: 'Kallio Development',
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: 'Startup'
     },
     {
-      name: "Personal",
+      name: 'Personal',
       logo: Command,
-      plan: "Free",
-    },
+      plan: 'Free'
+    }
   ],
   navMain: [
     {
-      title: "Documentation",
-      url: "/docs",
+      title: 'Documentation',
+      url: '/docs',
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: 'Introduction',
+          url: '#'
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: 'Get Started',
+          url: '#'
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-      ],
+          title: 'Tutorials',
+          url: '#'
+        }
+      ]
     },
     {
-      title: "Settings",
-      url: "/settings",
+      title: 'Settings',
+      url: '/settings',
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: 'General',
+          url: '#'
         },
         {
-          title: "Billing",
-          url: "#",
+          title: 'Billing',
+          url: '#'
         },
         {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+          title: 'Limits',
+          url: '#'
+        }
+      ]
+    }
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "/projects/1",
-      icon: Frame,
+      name: 'Design Engineering',
+      url: '/projects/1',
+      icon: Frame
     },
     {
-      name: "Sales & Marketing",
-      url: "/projects/2",
-      icon: PieChart,
+      name: 'Sales & Marketing',
+      url: '/projects/2',
+      icon: PieChart
     },
     {
-      name: "Travel",
-      url: "/projects/3",
-      icon: Map,
-    },
+      name: 'Travel',
+      url: '/projects/3',
+      icon: Map
+    }
   ],
   kallio: [
     {
-      name: "Upload",
+      name: 'Upload',
       onClick: () => {},
-      icon: Upload,
+      icon: Upload
     },
     {
-      name: "Video",
+      name: 'Video',
       onClick: () => {},
-      icon: Video,
+      icon: Video
     },
     {
-      name: "Photos",
+      name: 'Photos',
       onClick: () => {},
-      icon: Image,
+      icon: Image
     },
     {
-      name: "Audio",
+      name: 'Audio',
       onClick: () => {},
-      icon: Music,
+      icon: Music
     },
     {
-      name: "Captions",
+      name: 'Captions',
       onClick: () => {},
-      icon: Type,
-    },
-  ],
+      icon: Type
+    }
+  ]
 };
 
 export default sidebarData;

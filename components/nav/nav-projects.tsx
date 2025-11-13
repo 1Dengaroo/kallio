@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
 import {
   Folder,
   Forward,
   MoreHorizontal,
   Trash2,
-  type LucideIcon,
-} from "lucide-react";
+  type LucideIcon
+} from 'lucide-react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,12 +22,12 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { usePathname } from "next/navigation";
+  useSidebar
+} from '@/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 
 export function NavProjects({
-  projects,
+  projects
 }: {
   projects: {
     name: string;
@@ -64,8 +64,8 @@ export function NavProjects({
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
+                side={isMobile ? 'bottom' : 'right'}
+                align={isMobile ? 'end' : 'start'}
               >
                 <DropdownMenuItem>
                   <Folder className="text-muted-foreground" />

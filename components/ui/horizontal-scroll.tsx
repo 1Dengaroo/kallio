@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, ReactNode } from "react";
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 
 interface HorizontalScrollProps {
   children: ReactNode;
@@ -11,11 +11,11 @@ interface HorizontalScrollProps {
 
 export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   children,
-  className = "",
+  className = '',
   showShadows = true,
-  shadowColor = "black",
+  shadowColor = 'black',
   shadowWidth = 6,
-  debug = false,
+  debug = false
 }) => {
   const [showLeftShadow, setShowLeftShadow] = useState(false);
   const [showRightShadow, setShowRightShadow] = useState(false);
@@ -32,12 +32,12 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
     setShowRightShadow(shouldShowRight);
 
     if (debug) {
-      console.log("Scroll check:", {
+      console.log('Scroll check:', {
         scrollLeft,
         scrollWidth,
         clientWidth,
         shouldShowLeft,
-        shouldShowRight,
+        shouldShowRight
       });
     }
   };
@@ -47,18 +47,18 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
     if (!element) return;
 
     checkShadows();
-    element.addEventListener("scroll", checkShadows);
-    window.addEventListener("resize", checkShadows);
+    element.addEventListener('scroll', checkShadows);
+    window.addEventListener('resize', checkShadows);
 
     return () => {
-      element.removeEventListener("scroll", checkShadows);
-      window.removeEventListener("resize", checkShadows);
+      element.removeEventListener('scroll', checkShadows);
+      window.removeEventListener('resize', checkShadows);
     };
   }, [debug]);
 
   const shadowClasses = {
     left: `absolute left-0 top-0 bottom-0 w-${shadowWidth} bg-gradient-to-r from-${shadowColor}/50 via-${shadowColor}/30 to-transparent pointer-events-none z-20`,
-    right: `absolute right-0 top-0 bottom-0 w-${shadowWidth} bg-gradient-to-l from-${shadowColor}/50 via-${shadowColor}/30 to-transparent pointer-events-none z-20`,
+    right: `absolute right-0 top-0 bottom-0 w-${shadowWidth} bg-gradient-to-l from-${shadowColor}/50 via-${shadowColor}/30 to-transparent pointer-events-none z-20`
   };
 
   return (
@@ -66,8 +66,8 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
       {/* Debug indicator */}
       {debug && (
         <div className="absolute -top-6 left-0 text-xs text-red-400">
-          Left: {showLeftShadow ? "ON" : "OFF"} | Right:{" "}
-          {showRightShadow ? "ON" : "OFF"}
+          Left: {showLeftShadow ? 'ON' : 'OFF'} | Right:{' '}
+          {showRightShadow ? 'ON' : 'OFF'}
         </div>
       )}
 

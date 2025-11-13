@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -135,4 +135,10 @@
   50% {
     opacity: 0;
   }
+}
+
+/* Prevent horizontal overscroll on mobile */
+html,
+body {
+  overscroll-behavior-x: none;
 }
