@@ -33,7 +33,8 @@ export function ProjectSwitcher({
   const router = useRouter();
 
   // Find active project based on current URL
-  const activeProject = projects.find((project) => pathname === project.url) || projects[0];
+  const activeProject =
+    projects.find((project) => pathname === project.url) || projects[0];
 
   if (!activeProject) {
     return null;
@@ -52,7 +53,9 @@ export function ProjectSwitcher({
                 <activeProject.icon className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeProject.name}</span>
+                <span className="truncate font-medium">
+                  {activeProject.name}
+                </span>
                 <span className="truncate text-xs">Active Project</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -84,7 +87,9 @@ export function ProjectSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              <div className="text-muted-foreground font-medium">New project</div>
+              <div className="text-muted-foreground font-medium">
+                New project
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -9,8 +9,10 @@ import * as ScrollArea from '@radix-ui/react-scroll-area';
 import {
   TIMELINE_BOUNDING_CHANGED,
   TIMELINE_PREFIX,
+  ACTIVE_DELETE,
   filter,
-  subject
+  subject,
+  dispatch
 } from '@designcombo/events';
 import useStore from '@/store/store';
 import { handleEvents } from '@designcombo/timeline';
@@ -18,7 +20,6 @@ import Playhead from './playhead';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 import { Audio, Image, Text, Video } from './items';
 import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 
 CanvasTimeline.registerItems({
   Text,
@@ -34,7 +35,7 @@ const Timeline = () => {
   const canvasRef = useRef<CanvasTimeline | null>(null);
   const verticalScrollbarVpRef = useRef<HTMLDivElement>(null);
   const horizontalScrollbarVpRef = useRef<HTMLDivElement>(null);
-  const { scale, playerRef, fps } = useStore();
+  const { scale, playerRef, fps, activeIds } = useStore();
   const store = useStore();
   const currentFrame = useCurrentPlayerFrame(playerRef!);
 
@@ -149,6 +150,45 @@ const Timeline = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      // Backspace or Delete: Delete selected items
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        if (activeIds.length > 0) {
+          event.preventDefault();
+          dispatch(ACTIVE_DELETE);
+        }
+      }
+
+      // K: Play/Pause
+      if (event.key === 'k' || event.key === 'K') {
+        event.preventDefault();
+        if (playerRef?.current) {
+          const player = playerRef.current;
+          if (player.isPlaying()) {
+            player.pause();
+          } else {
+            player.play();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeIds, playerRef]);
 
   const onClickRuler = (units: number) => {
     const canvas = canvasRef.current;

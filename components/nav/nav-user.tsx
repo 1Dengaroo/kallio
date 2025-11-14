@@ -27,7 +27,12 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { shadcn } from '@clerk/themes';
 
 export function NavUser() {
@@ -75,7 +80,9 @@ export function NavUser() {
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">Sign In</span>
-                    <span className="truncate text-xs">Access your account</span>
+                    <span className="truncate text-xs">
+                      Access your account
+                    </span>
                   </div>
                 </SidebarMenuButton>
               </TooltipTrigger>

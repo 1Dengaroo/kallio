@@ -2,7 +2,12 @@ import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 import useStore from '@/store/store';
 import { timeMsToUnits, unitsToTimeMs } from '@designcombo/timeline';
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { frameToTimeString } from '@/utils/time';
 import { cn } from '@/lib/utils';
 
@@ -75,8 +80,8 @@ const Playhead = ({ scrollLeft }: { scrollLeft: number }) => {
             onMouseDown={(e) => handleMouseDown(e)}
             onTouchStart={(e) => handleMouseDown(e)}
             className={cn(
-              "absolute z-10 w-px cursor-pointer transition-colors hover:brightness-125",
-              isDragging && "cursor-grabbing"
+              'absolute z-10 w-px cursor-pointer transition-colors hover:brightness-125',
+              isDragging && 'cursor-grabbing'
             )}
             style={{
               left: 40 + position,
@@ -106,7 +111,9 @@ const Playhead = ({ scrollLeft }: { scrollLeft: number }) => {
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p className="font-mono">{frameToTimeString({ frame: currentFrame }, { fps })}</p>
+          <p className="font-mono">
+            {frameToTimeString({ frame: currentFrame }, { fps })}
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

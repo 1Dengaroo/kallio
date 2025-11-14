@@ -17,7 +17,12 @@ import {
 } from 'lucide-react';
 import { getNextZoomLevel, getPreviousZoomLevel } from '@/utils/timeline';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
@@ -118,7 +123,10 @@ const Header = () => {
                 {frameToTimeString({ frame: currentFrame }, { fps })}
               </Badge>
               <Separator orientation="vertical" className="h-4" />
-              <Badge variant="outline" className="font-mono text-muted-foreground">
+              <Badge
+                variant="outline"
+                className="font-mono text-muted-foreground"
+              >
                 {timeToString({ time: duration })}
               </Badge>
             </div>
@@ -126,7 +134,11 @@ const Header = () => {
             <div className="flex justify-end items-center px-4 gap-1">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size={'icon'} variant={'ghost'} onClick={onZoomOutClick}>
+                  <Button
+                    size={'icon'}
+                    variant={'ghost'}
+                    onClick={onZoomOutClick}
+                  >
                     <ZoomOut size={20} />
                   </Button>
                 </TooltipTrigger>
@@ -136,7 +148,11 @@ const Header = () => {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size={'icon'} variant={'ghost'} onClick={onZoomInClick}>
+                  <Button
+                    size={'icon'}
+                    variant={'ghost'}
+                    onClick={onZoomInClick}
+                  >
                     <ZoomIn size={20} />
                   </Button>
                 </TooltipTrigger>
