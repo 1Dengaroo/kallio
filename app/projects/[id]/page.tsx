@@ -14,10 +14,20 @@ import { generateId } from '@designcombo/timeline';
 import { Player } from '@/components/player';
 import useStore from '@/store/store';
 import useTimelineEvents from '@/hooks/use-timeline-events';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Upload, Image, Music, Type } from 'lucide-react';
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle
+} from '@/components/ui/resizable';
 
 export default function Page() {
   useTimelineEvents();
@@ -95,69 +105,95 @@ export default function Page() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-screen">
-        <div className="bg-background flex-1 flex flex-col items-center justify-center">
-          <Card className="max-w-3xl flex-1 w-full h-full flex border-0 shadow-none">
-            <Player />
-          </Card>
-          <Separator className="my-4" />
-          <div className="m-auto flex gap-2 py-4">
-            <input
-              ref={fileInputRef}
-              id="file-upload-handle"
-              type="file"
-              accept="video/*"
-              onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
-              className="hidden"
-            />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size={'sm'} onClick={handleClick} variant={'secondary'}>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Upload a video file</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size={'sm'} onClick={handleAddImage} variant={'secondary'}>
-                  <Image className="mr-2 h-4 w-4" />
-                  Add Image
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Add an image to the timeline</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size={'sm'} onClick={handleAddAudio} variant={'secondary'}>
-                  <Music className="mr-2 h-4 w-4" />
-                  Add Audio
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Add an audio track</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size={'sm'} onClick={handleAddText} variant={'secondary'}>
-                  <Type className="mr-2 h-4 w-4" />
-                  Add Text
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Add a text element</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
+      <div className="h-screen flex flex-col">
+        <ResizablePanelGroup direction="vertical">
+          <ResizablePanel defaultSize={70} minSize={30}>
+            <div className="bg-background h-full flex flex-col items-center justify-center">
+              <Card className="max-w-3xl flex-1 w-full h-full flex border-0 shadow-none">
+                <Player />
+              </Card>
+              <Separator className="my-4" />
+              <div className="m-auto flex gap-2 py-4">
+                <input
+                  ref={fileInputRef}
+                  id="file-upload-handle"
+                  type="file"
+                  accept="video/*"
+                  onChange={(e) =>
+                    handleFileChange(Array.from(e.target.files || []))
+                  }
+                  className="hidden"
+                />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size={'sm'}
+                      onClick={handleClick}
+                      variant={'secondary'}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Upload a video file</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size={'sm'}
+                      onClick={handleAddImage}
+                      variant={'secondary'}
+                    >
+                      <Image className="mr-2 h-4 w-4" />
+                      Add Image
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add an image to the timeline</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size={'sm'}
+                      onClick={handleAddAudio}
+                      variant={'secondary'}
+                    >
+                      <Music className="mr-2 h-4 w-4" />
+                      Add Audio
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add an audio track</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size={'sm'}
+                      onClick={handleAddText}
+                      variant={'secondary'}
+                    >
+                      <Type className="mr-2 h-4 w-4" />
+                      Add Text
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add a text element</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          </ResizablePanel>
 
-        {playerRef && <Timeline />}
+          <ResizableHandle withHandle />
+
+          <ResizablePanel defaultSize={30} minSize={20}>
+            {playerRef && <Timeline />}
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </TooltipProvider>
   );
