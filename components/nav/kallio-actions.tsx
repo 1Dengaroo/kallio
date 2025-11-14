@@ -48,7 +48,7 @@ export function KallioActions() {
 
     dispatch(ADD_VIDEO, {
       payload: {
-        id: resourceId,
+        id: generateId(),
         display: {
           from: 2000,
           to: 7000

@@ -174,7 +174,7 @@ const Ruler = (props: RulerProps) => {
 
   return (
     <div
-      className="border-t border-border"
+      className="border-t border-border cursor-pointer"
       style={{
         position: 'relative',
         width: '100%',

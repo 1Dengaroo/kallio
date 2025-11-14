@@ -205,10 +205,10 @@ const Timeline = () => {
       <Playhead scrollLeft={scrollLeft} />
       <div className="flex">
         <div className="relative w-10 flex-none"></div>
-        <div className="relative h-60 flex-1">
+        <div className="relative h-screen flex-1">
           <div
             ref={containerRef}
-            className="text-white text-sm h-60 absolute top-0 w-full"
+            className="text-white text-sm h-full absolute top-0 w-full"
           >
             <canvas ref={canvasElRef} />
           </div>
