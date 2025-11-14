@@ -17,6 +17,8 @@ import { handleEvents } from '@designcombo/timeline';
 import Playhead from './playhead';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 import { Audio, Image, Text, Video } from './items';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 CanvasTimeline.registerItems({
   Text,
@@ -157,16 +159,16 @@ const Timeline = () => {
   };
 
   return (
-    <div className="relative overflow-hidden">
+    <Card className="relative overflow-hidden border-t rounded-none shadow-none">
       <Header />
       <Ruler onClick={onClickRuler} scrollLeft={scrollLeft} />
       <Playhead scrollLeft={scrollLeft} />
       <div className="flex">
         <div className="relative w-10 flex-none"></div>
-        <div className="relative h-60 flex-1 ">
+        <div className="relative h-60 flex-1">
           <div
             ref={containerRef}
-            className="text-white text-sm h-60 absolute top-0 w-full "
+            className="text-white text-sm h-60 absolute top-0 w-full"
           >
             <canvas ref={canvasElRef} />
           </div>
@@ -189,7 +191,7 @@ const Timeline = () => {
                 style={{
                   width: size.width
                 }}
-                className="pointer-events-none  h-[10px]"
+                className="pointer-events-none h-[10px]"
               ></div>
             </ScrollArea.Viewport>
 
@@ -219,7 +221,7 @@ const Timeline = () => {
                 style={{
                   height: size.height
                 }}
-                className="pointer-events-none  w-[10px]"
+                className="pointer-events-none w-[10px]"
               ></div>
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar
@@ -231,7 +233,7 @@ const Timeline = () => {
           </ScrollArea.Root>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

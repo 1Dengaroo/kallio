@@ -17,6 +17,9 @@ import {
 } from 'lucide-react';
 import { getNextZoomLevel, getPreviousZoomLevel } from '@/utils/timeline';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 const Header = () => {
   const { duration, fps, scale, playerRef, activeIds } = useStore();
@@ -59,100 +62,93 @@ const Header = () => {
   };
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        height: '50px',
-        boxShadow: 'inset 0 1px 0 0 #27272a',
-        flex: 'none'
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          height: 50,
-          width: '100%'
-        }}
-      >
-        <div
-          style={{
-            height: 50,
-            width: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr 200px 1fr',
-            alignItems: 'center'
-          }}
-        >
-          <div className="px-4">
-            <Button
-              disabled={!activeIds.length}
-              onClick={doActiveDelete}
-              variant={'ghost'}
-              size={'icon'}
-            >
-              <Trash size={18} />
-            </Button>
-            <Button
-              disabled={!activeIds.length}
-              onClick={doActiveClone}
-              variant={'ghost'}
-              size={'icon'}
-            >
-              <Copy size={18} />
-            </Button>
-            <Button
-              disabled={!activeIds.length}
-              onClick={doActiveSplit}
-              variant={'ghost'}
-              size={'icon'}
-            >
-              <SquareSplitHorizontal size={18} />
-            </Button>
-          </div>
-          <div
-            className="text-sm font-light "
-            style={{
-              display: 'grid',
-              alignItems: 'center',
-              gridTemplateColumns: '72px 8px 72px',
-              paddingTop: '2px',
-              justifyContent: 'center'
-            }}
-          >
-            <div
-              className="text-zinc-200 font-medium"
-              style={{
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-              data-current-time={currentFrame / fps}
-              id="video-current-time"
-            >
-              {frameToTimeString({ frame: currentFrame }, { fps })}
+    <TooltipProvider>
+      <div className="relative h-[50px] flex-none border-t border-border">
+        <div className="absolute h-[50px] w-full">
+          <div className="h-[50px] w-full grid grid-cols-[1fr_200px_1fr] items-center">
+            <div className="px-4 flex gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    disabled={!activeIds.length}
+                    onClick={doActiveDelete}
+                    variant={'ghost'}
+                    size={'icon'}
+                  >
+                    <Trash size={18} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete selected items</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    disabled={!activeIds.length}
+                    onClick={doActiveClone}
+                    variant={'ghost'}
+                    size={'icon'}
+                  >
+                    <Copy size={18} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Duplicate selected items</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    disabled={!activeIds.length}
+                    onClick={doActiveSplit}
+                    variant={'ghost'}
+                    size={'icon'}
+                  >
+                    <SquareSplitHorizontal size={18} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Split selected items at playhead</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
-            <span>|</span>
-            <div
-              className="text-zinc-600"
-              style={{
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-            >
-              {timeToString({ time: duration })}
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <Badge variant="secondary" className="font-mono">
+                {frameToTimeString({ frame: currentFrame }, { fps })}
+              </Badge>
+              <Separator orientation="vertical" className="h-4" />
+              <Badge variant="outline" className="font-mono text-muted-foreground">
+                {timeToString({ time: duration })}
+              </Badge>
             </div>
-          </div>
 
-          <div className="flex justify-end items-center px-4">
-            <Button size={'icon'} variant={'ghost'} onClick={onZoomOutClick}>
-              <ZoomOut size={20} />
-            </Button>
-            <Button size={'icon'} variant={'ghost'} onClick={onZoomInClick}>
-              <ZoomIn size={20} />
-            </Button>
+            <div className="flex justify-end items-center px-4 gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size={'icon'} variant={'ghost'} onClick={onZoomOutClick}>
+                    <ZoomOut size={20} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Zoom out timeline</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size={'icon'} variant={'ghost'} onClick={onZoomInClick}>
+                    <ZoomIn size={20} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Zoom in timeline</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 

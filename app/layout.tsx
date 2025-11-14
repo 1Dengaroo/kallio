@@ -45,7 +45,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <AppSidebar />
-              <main className="relative w-screen h-screen p-4">
+              <main className="relative w-screen h-screen">
                 <SidebarTrigger className="absolute top-4 left-4 z-50" />
                 {children}
               </main>

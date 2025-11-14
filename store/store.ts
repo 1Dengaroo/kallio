@@ -1,14 +1,12 @@
-import CanvasTimeline from '@designcombo/timeline';
-import { PlayerRef } from '@remotion/player';
-import { create } from 'zustand';
-
-import {
+import CanvasTimeline, {
   ITimelineScaleState,
   ITimelineScrollState,
   ITrack,
   ITrackItem,
   ITransition
-} from '@designcombo/types';
+} from '@designcombo/timeline';
+import { PlayerRef } from '@remotion/player';
+import { create } from 'zustand';
 
 interface ITimelineStore {
   duration: number;
@@ -27,8 +25,7 @@ interface ITimelineStore {
   setScale: (scale: ITimelineScaleState) => void;
   setScroll: (scroll: ITimelineScrollState) => void;
   playerRef: React.RefObject<PlayerRef> | null;
-  setPlayerRef: (playerRef: React.RefObject<PlayerRef | null>) => void;
-
+  setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
   setState: (state: any) => Promise<void>;
 }
 
@@ -37,7 +34,6 @@ const useStore = create<ITimelineStore>((set) => ({
   duration: 5000,
   fps: 30,
   scale: {
-    index: 0,
     unit: 60,
     zoom: 1 / 90,
     segments: 5
