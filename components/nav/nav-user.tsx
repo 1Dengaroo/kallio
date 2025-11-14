@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { shadcn } from '@clerk/themes';
 
 export function NavUser() {
@@ -57,25 +58,34 @@ export function NavUser() {
 
   if (!user) {
     return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            onClick={() => openSignIn({ appearance })}
-            className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          >
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarFallback className="rounded-lg">
-                <LogIn className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">Sign In</span>
-              <span className="truncate text-xs">Access your account</span>
-            </div>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
+      <TooltipProvider>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  onClick={() => openSignIn({ appearance })}
+                  className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarFallback className="rounded-lg">
+                      <LogIn className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">Sign In</span>
+                    <span className="truncate text-xs">Access your account</span>
+                  </div>
+                </SidebarMenuButton>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Sign in to access your projects</p>
+              </TooltipContent>
+            </Tooltip>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </TooltipProvider>
     );
   }
 
