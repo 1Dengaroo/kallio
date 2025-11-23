@@ -3,7 +3,7 @@
 import React from 'react';
 import { Sequence, Html5Video } from 'remotion';
 import type { Clip, TextOverlay } from '@/types/video-editor';
-import { TextOverlayComponent } from './text-overlay';
+import { TextOverlayComponent } from '../video-components/text-overlay';
 
 interface VideoCompositionProps {
   clips: Clip[];
@@ -25,7 +25,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
             durationInFrames={item.duration}
           >
             {'src' in item ? (
-              <Html5Video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" />
+              <Html5Video src={item.src} />
             ) : (
               <TextOverlayComponent text={item.text} />
             )}

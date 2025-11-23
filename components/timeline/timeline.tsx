@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { TimelineMarker } from './timeline-marker';
 import { TimelineItem } from './timeline-item';
-import { useVideoEditor } from './video-editor-context';
+import { useVideoEditor } from '../../context/video-editor-context';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 
 interface TimelineProps {}
 
-export const Timeline: React.FC<TimelineProps> = (props) => {
+export const Timeline: React.FC<TimelineProps> = () => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const {
     clips,
@@ -25,11 +25,11 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
 
   const currentFrame = useCurrentPlayerFrame(playerRef);
 
-  const onAddClip = () => {
+  const handleAddClip = () => {
     addClip();
   };
 
-  const onAddTextOverlay = () => {
+  const handleAddTextOverlay = () => {
     addTextOverlay();
   };
 
@@ -40,7 +40,7 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
         <div className="flex justify-between items-center border-b p-4">
           <div className="flex items-center space-x-2">
             <Button
-              onClick={onAddClip}
+              onClick={handleAddClip}
               variant="outline"
               size="sm"
               className="gap-2"
@@ -49,7 +49,7 @@ export const Timeline: React.FC<TimelineProps> = (props) => {
               <span>Add Clip</span>
             </Button>
             <Button
-              onClick={onAddTextOverlay}
+              onClick={handleAddTextOverlay}
               variant="outline"
               size="sm"
               className="gap-2"

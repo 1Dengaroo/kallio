@@ -5,11 +5,9 @@ import {
   ResizablePanel,
   ResizableHandle
 } from '@/components/ui/resizable';
-import {
-  VideoEditorProvider,
-  VideoPlayer,
-  Timeline
-} from '@/components/video-editor';
+import { VideoPlayer } from '@/components/player';
+import { Timeline } from '@/components/timeline';
+import { VideoEditorProvider } from '@/context/video-editor-context';
 
 export default function Page() {
   return (

@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { Player, PlayerRef } from '@remotion/player';
 import { cn } from '@/lib/utils';
 import { VideoComposition } from './video-composition';
-import { useVideoEditor } from './video-editor-context';
+import { useVideoEditor } from '../../context/video-editor-context';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
