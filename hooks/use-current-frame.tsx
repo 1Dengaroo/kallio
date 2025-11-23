@@ -1,10 +1,13 @@
 import { CallbackListener, PlayerRef } from '@remotion/player';
 import { useCallback, useSyncExternalStore } from 'react';
+import { getSafeCurrentFrame } from '@/lib/time';
 
-export const useCurrentPlayerFrame = (ref: React.RefObject<PlayerRef>) => {
+export const useCurrentPlayerFrame = (
+  ref: React.RefObject<PlayerRef> | null
+) => {
   const subscribe = useCallback(
     (onStoreChange: () => void) => {
-      const { current } = ref;
+      const { current } = ref || {};
       if (!current) {
         return () => undefined;
       }
@@ -20,7 +23,7 @@ export const useCurrentPlayerFrame = (ref: React.RefObject<PlayerRef>) => {
   );
   const data = useSyncExternalStore<number>(
     subscribe,
-    () => ref.current?.getCurrentFrame() ?? 0,
+    () => getSafeCurrentFrame(ref),
     () => 0
   );
   return data;
