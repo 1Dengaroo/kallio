@@ -2,14 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Upload, Image, Music, Type } from 'lucide-react';
-import {
-  ADD_AUDIO,
-  ADD_IMAGE,
-  ADD_TEXT,
-  ADD_VIDEO,
-  dispatch
-} from '@designcombo/events';
-import { generateId } from '@designcombo/timeline';
 import { useRef } from 'react';
 
 import {
@@ -45,23 +37,6 @@ export function KallioActions() {
 
   const handleFileUpload = async (files: File[]) => {
     const resourceId = 'VMJQit9N0hJaCAss';
-
-    dispatch(ADD_VIDEO, {
-      payload: {
-        id: generateId(),
-        display: {
-          from: 2000,
-          to: 7000
-        },
-        details: {
-          src: URL.createObjectURL(files[0]),
-          name: files[0].name
-        },
-        metadata: {
-          resourceId
-        }
-      }
-    });
   };
 
   const handleFileChange = (newFiles: File[]) => {
@@ -72,47 +47,11 @@ export function KallioActions() {
     fileInputRef.current?.click();
   };
 
-  const handleAddImage = () => {
-    dispatch(ADD_IMAGE, {
-      payload: {
-        id: generateId(),
-        details: {
-          src: 'https://designcombo.imgix.net/images/sample-image.jpg',
-          zIndex: 1
-        }
-      }
-    });
-  };
+  const handleAddImage = () => {};
 
-  const handleAddAudio = () => {
-    dispatch(ADD_AUDIO, {
-      payload: {
-        id: generateId(),
-        details: {
-          src: 'https://designcombo.imgix.net/audios/stop-in-the-name-of-love.mp3',
-          volume: 50
-        }
-      }
-    });
-  };
+  const handleAddAudio = () => {};
 
-  const handleAddText = () => {
-    dispatch(ADD_TEXT, {
-      payload: {
-        id: generateId(),
-        details: {
-          text: 'Remotion',
-          fontSize: 142,
-          fontFamily: DEFAULT_FONT.postScriptName,
-          fontUrl: DEFAULT_FONT.url,
-          width: 400,
-          textAlign: 'left',
-          color: '#ffffff',
-          left: 80
-        }
-      }
-    });
-  };
+  const handleAddText = () => {};
   const actions = [
     {
       name: 'Upload',
