@@ -18,6 +18,7 @@ interface VideoEditorContextType {
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
+  reorderItems: (newOrder: Array<Clip | TextOverlay>) => void;
 }
 
 const VideoEditorContext = createContext<VideoEditorContextType | undefined>(
@@ -107,6 +108,31 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     updateTotalDuration(clips, updatedOverlays);
   }, [clips, textOverlays, updateTotalDuration]);
 
+  const reorderItems = useCallback(
+    (newOrder: Array<Clip | TextOverlay>) => {
+      // Recalculate start times based on new order
+      let currentStart = 0;
+      const reorderedItems = newOrder.map((item) => {
+        const updatedItem = { ...item, start: currentStart };
+        currentStart += item.duration;
+        return updatedItem;
+      });
+
+      // Separate clips and text overlays
+      const newClips = reorderedItems.filter(
+        (item): item is Clip => 'src' in item
+      );
+      const newTextOverlays = reorderedItems.filter(
+        (item): item is TextOverlay => 'text' in item
+      );
+
+      setClips(newClips);
+      setTextOverlays(newTextOverlays);
+      updateTotalDuration(newClips, newTextOverlays);
+    },
+    [updateTotalDuration]
+  );
+
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
@@ -114,7 +140,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     playerRef,
     addClip,
     addTextOverlay,
-    setPlayerRef
+    setPlayerRef,
+    reorderItems
   };
 
   return (
