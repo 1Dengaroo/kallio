@@ -21,8 +21,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
     type === 'clip'
       ? 'bg-primary'
       : type === 'text'
-      ? 'bg-purple-500'
-      : 'bg-green-500';
+        ? 'bg-purple-500'
+        : 'bg-green-500';
 
   return (
     <div

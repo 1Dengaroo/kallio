@@ -28,8 +28,8 @@ export const Draggable: React.FC<DraggableProps> = ({
 
   const style: React.CSSProperties = {
     ...customStyle,
-    opacity: isDragging ? 0.5 : customStyle.opacity ?? 1,
-    zIndex: isDragging ? 50 : customStyle.zIndex ?? 1,
+    opacity: isDragging ? 0.5 : (customStyle.opacity ?? 1),
+    zIndex: isDragging ? 50 : (customStyle.zIndex ?? 1),
     ...(transform && {
       transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
     }),
