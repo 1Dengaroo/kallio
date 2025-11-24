@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useMemo, useState, useCallback } from 'react';
+import { useRef, useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { TimelineMarker } from './timeline-marker';
@@ -8,14 +8,13 @@ import { TimelineItem } from './timeline-item';
 import { Draggable } from '@/components/ui/draggable';
 import { TimelineDnd } from './timeline-dnd';
 import { useVideoEditor } from '../../context/video-editor-context';
-import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 import {
   SortableContext,
   horizontalListSortingStrategy
 } from '@dnd-kit/sortable';
 import Ruler from './ruler';
 import { timeToPixels, unitsToTimeMs } from '@/utils/timeline';
-import { TIMELINE_OFFSET_X } from '@/constants';
+import { DEFAULT_FRAMERATE, TIMELINE_OFFSET_X } from '@/constants';
 
 interface TimelineProps {}
 
@@ -23,11 +22,8 @@ export const Timeline: React.FC<TimelineProps> = () => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollLeft, setScrollLeft] = useState(0);
-
-  const { allTimelineItems, totalDuration, playerRef, reorderItems, scale } =
+  const { allTimelineItems, totalDuration, playerRef, scale } =
     useVideoEditor();
-
-  const currentFrame = useCurrentPlayerFrame(playerRef);
 
   // Calculate total timeline width in pixels
   const timelineWidthPx = useMemo(() => {
@@ -42,7 +38,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
 
   const onClickRuler = (units: number) => {
     const time = unitsToTimeMs(units, scale.zoom);
-    playerRef?.current?.seekTo((time * 60) / 1000);
+    playerRef?.current?.seekTo((time * DEFAULT_FRAMERATE) / 1000);
   };
 
   return (
@@ -50,10 +46,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
       <div className="flex flex-col h-full overflow-hidden relative">
         {/* Ruler */}
         <Ruler onClick={onClickRuler} scrollLeft={scrollLeft} />
-        <TimelineMarker
-          currentFrame={currentFrame}
-          totalDuration={totalDuration}
-        />
+        <TimelineMarker scrollLeft={scrollLeft} />
         {/* Timeline items */}
         <div
           ref={timelineRef}
@@ -107,7 +100,6 @@ export const Timeline: React.FC<TimelineProps> = () => {
                           item={item}
                           type={'src' in item ? 'clip' : 'text'}
                           index={index}
-                          totalDuration={totalDuration}
                         />
                       </Draggable>
                     ))}

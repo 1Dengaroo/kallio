@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { FC } from 'react';
 import { cn } from '@/lib/utils';
 import type { Clip, TextOverlay } from '@/types';
 
@@ -8,15 +8,9 @@ interface TimelineItemProps {
   item: Clip | TextOverlay;
   type: 'clip' | 'text';
   index: number;
-  totalDuration: number;
 }
 
-export const TimelineItem: React.FC<TimelineItemProps> = ({
-  item,
-  type,
-  index,
-  totalDuration
-}) => {
+export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const bgColor =
     type === 'clip'
       ? 'bg-primary'

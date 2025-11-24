@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -14,12 +14,10 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useVideoEditor } from '@/context/video-editor-context';
 
 interface TimelineDndWrapperProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const TimelineDnd: React.FC<TimelineDndWrapperProps> = ({
-  children
-}) => {
+export const TimelineDnd: FC<TimelineDndWrapperProps> = ({ children }) => {
   const { allTimelineItems, reorderItems } = useVideoEditor();
   const sensors = useSensors(
     useSensor(PointerSensor),
