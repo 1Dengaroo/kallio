@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Sequence, Html5Video } from 'remotion';
-import type { Clip, TextOverlay } from '@/types/types';
+import type { Clip, TextOverlay } from '@/types';
 import { TextOverlayComponent } from '../video-components/text-overlay';
 
 interface VideoCompositionProps {

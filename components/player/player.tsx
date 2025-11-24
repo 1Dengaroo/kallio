@@ -5,6 +5,7 @@ import { Player, PlayerRef } from '@remotion/player';
 import { cn } from '@/lib/utils';
 import { VideoComposition } from './video-composition';
 import { useVideoEditor } from '../../context/video-editor-context';
+import { DEFAULT_FRAMERATE } from '@/constants';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
@@ -39,9 +40,8 @@ export const VideoPlayer: React.FC = () => {
           durationInFrames={Math.max(1, totalDuration)}
           compositionWidth={1920}
           compositionHeight={1080}
-          logLevel="trace"
           controls
-          fps={30}
+          fps={DEFAULT_FRAMERATE}
           style={{
             width: '100%',
             height: '100%'

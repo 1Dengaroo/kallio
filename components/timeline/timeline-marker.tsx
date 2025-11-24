@@ -2,6 +2,9 @@
 
 import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { TIMELINE_OFFSET_X } from '@/constants';
+import { timeToPixels } from '@/utils/timeline';
+import { useVideoEditor } from '@/context/video-editor-context';
 
 interface TimelineMarkerProps {
   currentFrame: number;
@@ -10,15 +13,16 @@ interface TimelineMarkerProps {
 
 export const TimelineMarker = React.memo<TimelineMarkerProps>(
   ({ currentFrame, totalDuration }) => {
+    const { scale } = useVideoEditor();
+
     const markerPosition = useMemo(() => {
-      return `${(currentFrame / totalDuration) * 100}%`;
-    }, [currentFrame, totalDuration]);
+      return `${timeToPixels(currentFrame, scale.zoom) + TIMELINE_OFFSET_X}px`;
+    }, [currentFrame, timeToPixels]);
 
     return (
       <div
         className={cn(
-          'absolute top-0 w-[1.4px] bg-destructive pointer-events-none z-50',
-          'transition-all duration-100'
+          'absolute top-0 w-[1.4px] bg-destructive pointer-events-none z-50'
         )}
         style={{
           left: markerPosition,

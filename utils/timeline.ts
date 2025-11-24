@@ -1,14 +1,14 @@
 import { FRAME_INTERVAL, PREVIEW_FRAME_WIDTH } from '@/constants';
 
-export function unitsToTimeMs(units: number, zoom = 1): number {
+export const unitsToTimeMs = (units: number, zoom = 1): number => {
   const zoomedFrameWidth = PREVIEW_FRAME_WIDTH * zoom;
 
   const frames = units / zoomedFrameWidth;
 
   return frames * FRAME_INTERVAL;
-}
+};
 
-export function formatTimelineUnit(units?: number): string {
+export const formatTimelineUnit = (units?: number): string => {
   if (!units) return '0';
   const time = units / PREVIEW_FRAME_WIDTH;
 
@@ -39,4 +39,14 @@ export function formatTimelineUnit(units?: number): string {
     2,
     '0'
   )}:${formattedTime[2].padStart(2, '0')}`;
-}
+};
+
+// Convert time (frames) to pixels using the ruler's coordinate system
+export const timeToPixels = (
+  timeInFrames: number,
+  scaleZoom: number
+): number => {
+  // Match the ruler's calculation: zoomUnit = unit * zoom * PREVIEW_FRAME_WIDTH
+  const pixelsPerFrame = scaleZoom * PREVIEW_FRAME_WIDTH;
+  return timeInFrames * pixelsPerFrame;
+};

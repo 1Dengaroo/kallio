@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { Clip, TextOverlay } from '@/types/types';
+import type { Clip, TextOverlay } from '@/types';
 
 interface TimelineItemProps {
   item: Clip | TextOverlay;

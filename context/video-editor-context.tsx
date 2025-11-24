@@ -5,22 +5,24 @@ import React, {
   useContext,
   useState,
   useCallback,
-  ReactNode
+  ReactNode,
+  useMemo
 } from 'react';
-import type { Clip, TextOverlay, Scale } from '@/types/types';
+import type { Clip, TextOverlay, Scale, TimelineItem } from '@/types';
 import { PlayerRef } from '@remotion/player';
 import { DEFAULT_SCALE } from '@/constants';
 
 interface VideoEditorContextType {
   clips: Clip[];
   textOverlays: TextOverlay[];
+  allTimelineItems: Array<TimelineItem>;
   totalDuration: number;
   playerRef: React.RefObject<PlayerRef> | null;
   scale: Scale;
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
-  reorderItems: (newOrder: Array<Clip | TextOverlay>) => void;
+  reorderItems: (newOrder: Array<TimelineItem>) => void;
   setScale: (scale: Scale) => void;
 }
 
@@ -113,7 +115,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   }, [clips, textOverlays, updateTotalDuration]);
 
   const reorderItems = useCallback(
-    (newOrder: Array<Clip | TextOverlay>) => {
+    (newOrder: Array<TimelineItem>) => {
       // Recalculate start times based on new order
       let currentStart = 0;
       const reorderedItems = newOrder.map((item) => {
@@ -137,9 +139,15 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [updateTotalDuration]
   );
 
+  const allTimelineItems = useMemo(
+    () => [...clips, ...textOverlays].sort((a, b) => a.start - b.start),
+    [clips, textOverlays]
+  );
+
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
+    allTimelineItems,
     totalDuration,
     playerRef,
     addClip,

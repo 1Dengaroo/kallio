@@ -1,9 +1,9 @@
-import type { Scale } from '@/types/types';
+import type { Scale } from '@/types';
 
 export const DEFAULT_SCALE: Scale = {
   unit: 60,
   zoom: 1 / 90,
-  segments: 5
+  segments: 10
 };
 
 export const TIMELINE_OFFSET_X = 40;

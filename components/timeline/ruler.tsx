@@ -4,28 +4,19 @@ import { useVideoEditor } from '@/context/video-editor-context';
 import { TIMELINE_OFFSET_X } from '@/constants';
 
 interface RulerProps {
-  height?: number;
-  longLineSize?: number;
-  shortLineSize?: number;
-  offsetX?: number;
-  textOffsetY?: number;
-  scrollPos?: number;
-  textFormat?: (scale: number) => string;
   scrollLeft?: number;
   onClick?: (units: number) => void;
 }
 
-const Ruler = (props: RulerProps) => {
-  const {
-    height = 40, // Increased height to give space for the text
-    longLineSize = 8,
-    shortLineSize = 6,
-    offsetX = TIMELINE_OFFSET_X,
-    textOffsetY = 12, // Place the text above the lines but inside the canvas
-    textFormat = formatTimelineUnit,
-    scrollLeft: scrollPos = 0,
-    onClick
-  } = props;
+const Ruler = ({ scrollLeft, onClick }: RulerProps) => {
+  const height = 40; // Increased height to give space for the text
+  const longLineSize = 8;
+  const shortLineSize = 6;
+  const offsetX = TIMELINE_OFFSET_X;
+  const textOffsetY = 12; // Place the text above the lines but inside the canvas
+  const textFormat = formatTimelineUnit;
+  const scrollPos = scrollLeft ?? 0;
+
   const { scale } = useVideoEditor();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [canvasContext, setCanvasContext] =
@@ -168,7 +159,7 @@ const Ruler = (props: RulerProps) => {
 
   return (
     <div
-      className="border-t border-border"
+      className="border-t border-border cursor-pointer"
       style={{
         position: 'relative',
         width: '100%',
