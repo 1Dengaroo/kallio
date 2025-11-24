@@ -17,21 +17,14 @@ export const Draggable: React.FC<DraggableProps> = ({
   className,
   style: customStyle = {}
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging
-  } = useDraggable({ id });
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id
+  });
 
   const style: React.CSSProperties = {
     ...customStyle,
     opacity: isDragging ? 0.5 : (customStyle.opacity ?? 1),
-    zIndex: isDragging ? 50 : (customStyle.zIndex ?? 1),
-    ...(transform && {
-      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
-    })
+    zIndex: isDragging ? 50 : (customStyle.zIndex ?? 1)
   };
 
   return (

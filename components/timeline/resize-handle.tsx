@@ -10,7 +10,11 @@ interface ResizeHandleProps {
   itemId: string;
 }
 
-export const ResizeHandle: React.FC<ResizeHandleProps> = ({ id, side, itemId }) => {
+export const ResizeHandle: React.FC<ResizeHandleProps> = ({
+  id,
+  side,
+  itemId
+}) => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     data: {
