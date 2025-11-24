@@ -22,7 +22,12 @@ interface VideoEditorContextType {
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
-  reorderItems: (newOrder: Array<TimelineItem>) => void;
+  updateItemPosition: (itemId: string, newStart: number) => void;
+  updateItemStartAndDuration: (
+    itemId: string,
+    newStart: number,
+    newDuration: number
+  ) => void;
   setScale: (scale: Scale) => void;
 }
 
@@ -51,6 +56,11 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const [scale, setScale] = useState<Scale>(DEFAULT_SCALE);
   const [playerRef, setPlayerRef] = useState<React.RefObject<PlayerRef> | null>(
     null
+  );
+
+  const allTimelineItems = useMemo(
+    () => [...clips, ...textOverlays].sort((a, b) => a.start - b.start),
+    [clips, textOverlays]
   );
 
   const updateTotalDuration = useCallback(
@@ -114,34 +124,49 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     updateTotalDuration(clips, updatedOverlays);
   }, [clips, textOverlays, updateTotalDuration]);
 
-  const reorderItems = useCallback(
-    (newOrder: Array<TimelineItem>) => {
-      // Recalculate start times based on new order
-      let currentStart = 0;
-      const reorderedItems = newOrder.map((item) => {
-        const updatedItem = { ...item, start: currentStart };
-        currentStart += item.duration;
-        return updatedItem;
-      });
+  const updateItemPosition = useCallback(
+    (itemId: string, newStart: number) => {
+      // Ensure start is not negative
+      const clampedStart = Math.max(0, newStart);
 
-      // Separate clips and text overlays
-      const newClips = reorderedItems.filter(
-        (item): item is Clip => 'src' in item
+      // Update the item in clips or textOverlays
+      const updatedClips = clips.map((clip) =>
+        clip.id === itemId ? { ...clip, start: clampedStart } : clip
       );
-      const newTextOverlays = reorderedItems.filter(
-        (item): item is TextOverlay => 'text' in item
+      const updatedTextOverlays = textOverlays.map((overlay) =>
+        overlay.id === itemId ? { ...overlay, start: clampedStart } : overlay
       );
 
-      setClips(newClips);
-      setTextOverlays(newTextOverlays);
-      updateTotalDuration(newClips, newTextOverlays);
+      setClips(updatedClips);
+      setTextOverlays(updatedTextOverlays);
+      updateTotalDuration(updatedClips, updatedTextOverlays);
     },
-    [updateTotalDuration]
+    [clips, textOverlays, updateTotalDuration]
   );
 
-  const allTimelineItems = useMemo(
-    () => [...clips, ...textOverlays].sort((a, b) => a.start - b.start),
-    [clips, textOverlays]
+  const updateItemStartAndDuration = useCallback(
+    (itemId: string, newStart: number, newDuration: number) => {
+      // Ensure start is not negative and duration is at least 1 frame
+      const clampedStart = Math.max(0, newStart);
+      const clampedDuration = Math.max(1, newDuration);
+
+      // Update the item in clips or textOverlays
+      const updatedClips = clips.map((clip) =>
+        clip.id === itemId
+          ? { ...clip, start: clampedStart, duration: clampedDuration }
+          : clip
+      );
+      const updatedTextOverlays = textOverlays.map((overlay) =>
+        overlay.id === itemId
+          ? { ...overlay, start: clampedStart, duration: clampedDuration }
+          : overlay
+      );
+
+      setClips(updatedClips);
+      setTextOverlays(updatedTextOverlays);
+      updateTotalDuration(updatedClips, updatedTextOverlays);
+    },
+    [clips, textOverlays, updateTotalDuration]
   );
 
   const value: VideoEditorContextType = {
@@ -154,7 +179,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     scale,
     addTextOverlay,
     setPlayerRef,
-    reorderItems,
+    updateItemPosition,
+    updateItemStartAndDuration,
     setScale
   };
 

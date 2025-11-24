@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
+import { useDraggable } from '@dnd-kit/core';
 import { cn } from '@/lib/utils';
 
 interface DraggableProps {
@@ -22,9 +22,8 @@ export const Draggable: React.FC<DraggableProps> = ({
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging
-  } = useSortable({ id });
+  } = useDraggable({ id });
 
   const style: React.CSSProperties = {
     ...customStyle,
@@ -32,8 +31,7 @@ export const Draggable: React.FC<DraggableProps> = ({
     zIndex: isDragging ? 50 : (customStyle.zIndex ?? 1),
     ...(transform && {
       transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`
-    }),
-    transition: isDragging ? 'none' : transition
+    })
   };
 
   return (

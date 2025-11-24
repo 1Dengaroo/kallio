@@ -5,13 +5,8 @@ import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { TimelineMarker } from './timeline-marker';
 import { TimelineItem } from './timeline-item';
-import { Draggable } from '@/components/ui/draggable';
 import { TimelineDnd } from './timeline-dnd';
 import { useVideoEditor } from '../../context/video-editor-context';
-import {
-  SortableContext,
-  horizontalListSortingStrategy
-} from '@dnd-kit/sortable';
 import Ruler from './ruler';
 import { timeToPixels, unitsToTimeMs } from '@/utils/timeline';
 import { DEFAULT_FRAMERATE, TIMELINE_OFFSET_X } from '@/constants';
@@ -55,7 +50,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
             'border-t border-border'
           )}
         >
-          <TimelineDnd>
+          <TimelineDnd scrollLeft={scrollLeft}>
             <div className="absolute inset-0">
               <div
                 ref={scrollContainerRef}
@@ -69,7 +64,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
                     height: '100%',
                     position: 'relative',
                     minWidth: '100%',
-                    marginLeft: `${TIMELINE_OFFSET_X}px`
+                    marginInline: `${TIMELINE_OFFSET_X}px`
                   }}
                 >
                   {/* Background */}
@@ -78,32 +73,14 @@ export const Timeline: React.FC<TimelineProps> = () => {
                       <div className="flex-grow bg-gradient-to-b from-muted to-muted/50 rounded-sm" />
                     </div>
                   </div>
-                  <SortableContext
-                    items={allTimelineItems.map((item) => item.id)}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    {allTimelineItems.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        id={item.id}
-                        className="absolute"
-                        style={{
-                          left: `${timeToPixels(item.start, scale.zoom)}px`,
-                          width: `${
-                            timeToPixels(item.duration, scale.zoom) - 4
-                          }px`,
-                          top: `${item.row * 44}px`
-                        }}
-                      >
-                        <TimelineItem
-                          key={item.id}
-                          item={item}
-                          type={'src' in item ? 'clip' : 'text'}
-                          index={index}
-                        />
-                      </Draggable>
-                    ))}
-                  </SortableContext>
+                  {allTimelineItems.map((item, index) => (
+                    <TimelineItem
+                      key={item.id}
+                      item={item}
+                      type={'src' in item ? 'clip' : 'text'}
+                      index={index}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
