@@ -5,8 +5,9 @@ import { ThemeProvider } from 'next-themes';
 import { Analytics } from '@vercel/analytics/next';
 import { ClerkProvider } from '@clerk/nextjs';
 
-import { AppSidebar } from '@/components/nav/sidebar';
+import { Sidebar } from '@/components/nav/sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { VideoEditorProvider } from '@/context/video-editor-context';
 
 const inter = Inter({ subsets: ['latin'] });
 const baseUrl = 'https://kallio.ai';
@@ -35,25 +36,27 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} antialiased`}>
-          <SidebarProvider defaultOpen={false}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <AppSidebar />
-              <main className="relative w-screen h-screen">
-                <SidebarTrigger className="absolute top-4 left-4 z-50" />
-                {children}
-              </main>
-            </ThemeProvider>
-          </SidebarProvider>
-          <Analytics />
-        </body>
-      </html>
+      <VideoEditorProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body className={`${inter.className} antialiased`}>
+            <SidebarProvider defaultOpen={false}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Sidebar />
+                <main className="relative w-screen h-screen">
+                  <SidebarTrigger className="absolute top-4 left-4 z-50" />
+                  {children}
+                </main>
+              </ThemeProvider>
+            </SidebarProvider>
+            <Analytics />
+          </body>
+        </html>
+      </VideoEditorProvider>
     </ClerkProvider>
   );
 }

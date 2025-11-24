@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useRef, useMemo } from 'react';
-import { Plus, LetterText } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { TimelineMarker } from './timeline-marker';
 import { TimelineItem } from './timeline-item';
@@ -34,8 +32,6 @@ export const Timeline: React.FC<TimelineProps> = () => {
     clips,
     textOverlays,
     totalDuration,
-    addClip,
-    addTextOverlay,
     playerRef,
     reorderItems
   } = useVideoEditor();
@@ -66,41 +62,9 @@ export const Timeline: React.FC<TimelineProps> = () => {
     }
   };
 
-  const handleAddClip = () => {
-    addClip();
-  };
-
-  const handleAddTextOverlay = () => {
-    addTextOverlay();
-  };
-
   return (
     <Card className="border-t rounded-none border-x-0 border-b-0 h-full">
       <div className="flex flex-col h-full overflow-hidden">
-        {/* Timeline controls */}
-        <div className="flex justify-between items-center border-b p-4">
-          <div className="flex items-center space-x-2">
-            <Button
-              onClick={handleAddClip}
-              variant="outline"
-              size="sm"
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Clip</span>
-            </Button>
-            <Button
-              onClick={handleAddTextOverlay}
-              variant="outline"
-              size="sm"
-              className="gap-2"
-            >
-              <LetterText className="h-4 w-4" />
-              <span>Add Text</span>
-            </Button>
-          </div>
-        </div>
-
         {/* Timeline items */}
         <div
           ref={timelineRef}
