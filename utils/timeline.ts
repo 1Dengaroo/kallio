@@ -1,45 +1,4 @@
-import { TIMELINE_ZOOM_LEVELS } from '@/constants/scale';
-import { findIndex } from './search';
-import { FRAME_INTERVAL, PREVIEW_FRAME_WIDTH } from '@/constants/settings';
-import { ITimelineScaleState } from '@designcombo/timeline';
-
-export function getPreviousZoomLevel(
-  currentZoom: ITimelineScaleState
-): ITimelineScaleState {
-  return TIMELINE_ZOOM_LEVELS[getPreviousZoomIndex(currentZoom)];
-}
-
-export function getNextZoomLevel(
-  currentZoom: ITimelineScaleState
-): ITimelineScaleState {
-  return TIMELINE_ZOOM_LEVELS[getNextZoomIndex(currentZoom)];
-}
-
-export function getPreviousZoomIndex(currentZoom: ITimelineScaleState): number {
-  const lastLevel = TIMELINE_ZOOM_LEVELS.at(-1);
-  const isLastIndex = currentZoom === lastLevel;
-  const nextZoomIndex = getNextZoomIndex(currentZoom);
-  const previousZoomIndex = nextZoomIndex - (isLastIndex ? 1 : 2);
-
-  // Limit zoom to the first default level.
-  return Math.max(0, previousZoomIndex);
-}
-
-export function getNextZoomIndex(currentZoom: ITimelineScaleState): number {
-  const nextZoomIndex = findIndex(TIMELINE_ZOOM_LEVELS, (level) => {
-    return level.zoom > currentZoom.zoom;
-  });
-
-  // Limit zoom to the last default level.
-  return Math.min(TIMELINE_ZOOM_LEVELS.length - 1, nextZoomIndex);
-}
-
-export function timeMsToUnits(timeMs: number, zoom = 1): number {
-  const zoomedFrameWidth = PREVIEW_FRAME_WIDTH * zoom;
-  const frames = timeMs * (60 / 1000);
-
-  return frames * zoomedFrameWidth;
-}
+import { FRAME_INTERVAL, PREVIEW_FRAME_WIDTH } from '@/constants';
 
 export function unitsToTimeMs(units: number, zoom = 1): number {
   const zoomedFrameWidth = PREVIEW_FRAME_WIDTH * zoom;
@@ -49,9 +8,35 @@ export function unitsToTimeMs(units: number, zoom = 1): number {
   return frames * FRAME_INTERVAL;
 }
 
-export function calculateTimelineWidth(
-  totalLengthMs: number,
-  zoom = 1
-): number {
-  return timeMsToUnits(totalLengthMs, zoom);
+export function formatTimelineUnit(units?: number): string {
+  if (!units) return '0';
+  const time = units / PREVIEW_FRAME_WIDTH;
+
+  const frames = Math.trunc(time) % 60;
+  const seconds = Math.trunc(time / 60) % 60;
+  const minutes = Math.trunc(time / 3600) % 60;
+  const hours = Math.trunc(time / 216000);
+  const formattedTime = [
+    hours.toString(),
+    minutes.toString(),
+    seconds.toString(),
+    frames.toString()
+  ];
+
+  if (time < 60) {
+    return `${formattedTime[3].padStart(2, '0')}f`;
+  }
+  if (time < 3600) {
+    return `${formattedTime[2].padStart(1, '0')}s`;
+  }
+  if (time < 216000) {
+    return `${formattedTime[1].padStart(2, '0')}:${formattedTime[2].padStart(
+      2,
+      '0'
+    )}`;
+  }
+  return `${formattedTime[0].padStart(2, '0')}:${formattedTime[1].padStart(
+    2,
+    '0'
+  )}:${formattedTime[2].padStart(2, '0')}`;
 }

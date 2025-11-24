@@ -23,18 +23,15 @@ import {
   sortableKeyboardCoordinates,
   horizontalListSortingStrategy
 } from '@dnd-kit/sortable';
+import Ruler from './ruler';
+import { unitsToTimeMs } from '@/utils/timeline';
 
 interface TimelineProps {}
 
 export const Timeline: React.FC<TimelineProps> = () => {
   const timelineRef = useRef<HTMLDivElement>(null);
-  const {
-    clips,
-    textOverlays,
-    totalDuration,
-    playerRef,
-    reorderItems
-  } = useVideoEditor();
+  const { clips, textOverlays, totalDuration, playerRef, reorderItems, scale } =
+    useVideoEditor();
 
   const currentFrame = useCurrentPlayerFrame(playerRef);
 
@@ -62,9 +59,16 @@ export const Timeline: React.FC<TimelineProps> = () => {
     }
   };
 
+  const onClickRuler = (units: number) => {
+    const time = unitsToTimeMs(units, scale.zoom);
+    playerRef?.current?.seekTo((time * 60) / 1000);
+  };
+
   return (
     <Card className="border-t rounded-none border-x-0 border-b-0 h-full">
       <div className="flex flex-col h-full overflow-hidden">
+        {/* Ruler */}
+        <Ruler onClick={onClickRuler} scrollLeft={0} />
         {/* Timeline items */}
         <div
           ref={timelineRef}

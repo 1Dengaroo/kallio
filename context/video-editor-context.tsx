@@ -7,18 +7,21 @@ import React, {
   useCallback,
   ReactNode
 } from 'react';
-import type { Clip, TextOverlay } from '@/types/video-editor';
+import type { Clip, TextOverlay, Scale } from '@/types/types';
 import { PlayerRef } from '@remotion/player';
+import { DEFAULT_SCALE } from '@/constants';
 
 interface VideoEditorContextType {
   clips: Clip[];
   textOverlays: TextOverlay[];
   totalDuration: number;
   playerRef: React.RefObject<PlayerRef> | null;
+  scale: Scale;
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
   reorderItems: (newOrder: Array<Clip | TextOverlay>) => void;
+  setScale: (scale: Scale) => void;
 }
 
 const VideoEditorContext = createContext<VideoEditorContextType | undefined>(
@@ -43,6 +46,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const [clips, setClips] = useState<Clip[]>([]);
   const [textOverlays, setTextOverlays] = useState<TextOverlay[]>([]);
   const [totalDuration, setTotalDuration] = useState(1);
+  const [scale, setScale] = useState<Scale>(DEFAULT_SCALE);
   const [playerRef, setPlayerRef] = useState<React.RefObject<PlayerRef> | null>(
     null
   );
@@ -139,9 +143,11 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     totalDuration,
     playerRef,
     addClip,
+    scale,
     addTextOverlay,
     setPlayerRef,
-    reorderItems
+    reorderItems,
+    setScale
   };
 
   return (

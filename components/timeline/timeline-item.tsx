@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { Clip, TextOverlay } from '@/types/video-editor';
+import type { Clip, TextOverlay } from '@/types/types';
 
 interface TimelineItemProps {
   item: Clip | TextOverlay;
@@ -21,8 +21,8 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
     type === 'clip'
       ? 'bg-primary'
       : type === 'text'
-        ? 'bg-purple-500'
-        : 'bg-green-500';
+      ? 'bg-purple-500'
+      : 'bg-green-500';
 
   return (
     <div
