@@ -1,20 +1,23 @@
-export interface Clip {
+export interface BaseTimelineItem {
   id: string;
   start: number;
+  /* In frames (FRAMERATE * SECONDS) */
   duration: number;
+  row: number;
+}
+export interface Clip extends BaseTimelineItem {
+  type: 'clip';
+  /* In frames (FRAMERATE * SECONDS) */
+  sourceDuration: number;
   src: string;
-  row: number;
 }
-
-export interface TextOverlay {
-  id: string;
-  start: number;
-  duration: number;
+export interface TextOverlay extends BaseTimelineItem {
+  type: 'text';
   text: string;
-  row: number;
 }
 
-export type TimelineItem = Clip | TextOverlay;
+// Union type for all timeline items
+export type TimelineItemType = Clip | TextOverlay;
 
 export interface Scale {
   zoom: number;

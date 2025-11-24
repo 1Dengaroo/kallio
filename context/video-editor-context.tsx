@@ -8,14 +8,14 @@ import React, {
   ReactNode,
   useMemo
 } from 'react';
-import type { Clip, TextOverlay, Scale, TimelineItem } from '@/types';
+import type { Clip, TextOverlay, Scale, TimelineItemType } from '@/types';
 import { PlayerRef } from '@remotion/player';
 import { DEFAULT_SCALE } from '@/constants';
 
 interface VideoEditorContextType {
   clips: Clip[];
   textOverlays: TextOverlay[];
-  allTimelineItems: Array<TimelineItem>;
+  allTimelineItems: Array<TimelineItemType>;
   totalDuration: number;
   playerRef: React.RefObject<PlayerRef> | null;
   scale: Scale;
@@ -91,8 +91,10 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
     const newClip: Clip = {
       id: `clip-${clips.length + 1}`,
+      type: 'clip',
       start: lastItem.start + lastItem.duration,
       duration: 300,
+      sourceDuration: 900,
       src: 'https://hgwavsootdmvmjdvfiwc.supabase.co/storage/v1/object/public/clips/reactvideoeditor-quality.mp4?t=2024-09-03T02%3A09%3A02.395Z',
       row: 0
     };
@@ -113,6 +115,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
     const newOverlay: TextOverlay = {
       id: `text-${textOverlays.length + 1}`,
+      type: 'text',
       start: lastItem.start + lastItem.duration,
       duration: 100,
       text: `Text ${textOverlays.length + 1}`,

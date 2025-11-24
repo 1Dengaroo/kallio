@@ -12,6 +12,7 @@ import {
 } from '@dnd-kit/core';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { PREVIEW_FRAME_WIDTH } from '@/constants';
+import { getMaxSourceDurationFrames } from '@/utils/timeline';
 
 interface TimelineDndWrapperProps {
   children: ReactNode;
@@ -113,12 +114,17 @@ export const TimelineDnd: FC<TimelineDndWrapperProps> = ({
 
       const deltaFrames = delta.x / pixelsPerFrame;
       const minDuration = 1;
+      const maxDuration = getMaxSourceDurationFrames(item);
 
       if (side === 'left') {
         // Resizing from left: change start and duration
-        // Constrain the delta to prevent going negative or below min duration
+        // Constrain the delta to prevent going negative, below min duration, or above max source duration
         const maxLeftDelta = item.duration - minDuration;
-        const constrainedDeltaFrames = Math.min(deltaFrames, maxLeftDelta);
+        const minLeftDelta = -(maxDuration - item.duration);
+        const constrainedDeltaFrames = Math.min(
+          Math.max(deltaFrames, minLeftDelta),
+          maxLeftDelta
+        );
 
         const newStart = Math.max(
           0,
@@ -130,11 +136,14 @@ export const TimelineDnd: FC<TimelineDndWrapperProps> = ({
         updateItemStartAndDuration(itemId, newStart, newDuration);
       } else {
         // Resizing from right: change only duration
-        // Constrain to prevent going below min duration
+        // Constrain to prevent going below min duration or above max source duration
         const maxRightDelta = -(item.duration - minDuration);
         const constrainedDeltaFrames = Math.max(deltaFrames, maxRightDelta);
 
-        const newDuration = Math.round(item.duration + constrainedDeltaFrames);
+        const newDuration = Math.min(
+          maxDuration,
+          Math.round(item.duration + constrainedDeltaFrames)
+        );
 
         updateItemStartAndDuration(itemId, item.start, newDuration);
       }

@@ -13,3 +13,6 @@ export const TIMELINE_OFFSET_X = 40;
 
 export const PREVIEW_FRAME_WIDTH = 188;
 export const FRAME_INTERVAL = 1000 / DEFAULT_FRAMERATE;
+
+// Maximum source duration in frames (30 minutes at 60fps)
+export const MAX_SOURCE_DURATION_FRAMES = 1800 * DEFAULT_FRAMERATE;

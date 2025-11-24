@@ -1,4 +1,10 @@
-import { FRAME_INTERVAL, PREVIEW_FRAME_WIDTH } from '@/constants';
+import {
+  FRAME_INTERVAL,
+  PREVIEW_FRAME_WIDTH,
+  MAX_SOURCE_DURATION_FRAMES
+} from '@/constants';
+import { isClip, isTextOverlay } from '@/types/guards';
+import { TimelineItemType } from '@/types';
 
 export const unitsToTimeMs = (units: number, zoom = 1): number => {
   const zoomedFrameWidth = PREVIEW_FRAME_WIDTH * zoom;
@@ -49,4 +55,13 @@ export const timeToPixels = (
   // Match the ruler's calculation: zoomUnit = unit * zoom * PREVIEW_FRAME_WIDTH
   const pixelsPerFrame = scaleZoom * PREVIEW_FRAME_WIDTH;
   return timeInFrames * pixelsPerFrame;
+};
+
+export const getMaxSourceDurationFrames = (item: TimelineItemType): number => {
+  if (isClip(item)) {
+    return item.sourceDuration;
+  } else if (isTextOverlay(item)) {
+    return MAX_SOURCE_DURATION_FRAMES;
+  }
+  return MAX_SOURCE_DURATION_FRAMES;
 };

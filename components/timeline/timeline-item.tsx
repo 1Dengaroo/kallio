@@ -1,16 +1,17 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import type { Clip, TextOverlay } from '@/types';
+import type { TimelineItemType } from '@/types';
 import { ResizeHandle } from './resize-handle';
 import { Draggable } from '../ui/draggable';
 import { useDragState } from './timeline-dnd';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { timeToPixels } from '@/utils/timeline';
+import { getMaxSourceDurationFrames } from '@/utils/timeline';
 
 interface TimelineItemProps {
-  item: Clip | TextOverlay;
+  item: TimelineItemType;
   type: 'clip' | 'text';
   index: number;
 }
@@ -25,6 +26,10 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
       : type === 'text'
       ? 'bg-purple-500'
       : 'bg-green-500';
+
+  const maxDurationPx = useMemo(() => {
+    return timeToPixels(getMaxSourceDurationFrames(item), scale.zoom) - 4;
+  }, [item, scale.zoom]);
 
   const getDragStyle = () => {
     const baseLeft = timeToPixels(item.start, scale.zoom);
@@ -43,8 +48,12 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
     if (dragState.type === 'resize') {
       if (dragState.side === 'left') {
         // Resizing from left: move left position and adjust width
+        // Calculate max width based on source duration
         const constrainedDelta = Math.min(
-          dragState.delta.x,
+          Math.max(
+            dragState.delta.x,
+            -(maxDurationPx - baseWidth) // Don't exceed max source duration
+          ),
           baseWidth - minDurationPx // Don't shrink below min duration
         );
         const newLeft = Math.max(0, baseLeft + constrainedDelta); // Don't go negative
@@ -57,8 +66,12 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
         };
       } else {
         // Resizing from right: only adjust width
+        // Calculate max width based on source duration
         const constrainedDelta = Math.max(
-          dragState.delta.x,
+          Math.min(
+            dragState.delta.x,
+            maxDurationPx - baseWidth // Don't exceed max source duration
+          ),
           -(baseWidth - minDurationPx) // Don't shrink below min duration
         );
 
