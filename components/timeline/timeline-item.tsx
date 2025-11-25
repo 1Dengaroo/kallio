@@ -9,6 +9,7 @@ import { useDragState } from './timeline-dnd';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { timeToPixels } from '@/utils/timeline';
 import { getMaxSourceDurationFrames } from '@/utils/timeline';
+import { TIMELINE_ROW_HEIGHT } from '@/constants';
 
 interface TimelineItemProps {
   item: TimelineItemType;
@@ -18,14 +19,14 @@ interface TimelineItemProps {
 
 export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const dragState = useDragState();
-  const { scale } = useVideoEditor();
+  const { scale, allTimelineItems } = useVideoEditor();
 
   const bgColor =
     type === 'clip'
       ? 'bg-primary'
       : type === 'text'
-        ? 'bg-purple-500'
-        : 'bg-green-500';
+      ? 'bg-purple-500'
+      : 'bg-green-500';
 
   const maxDurationPx = useMemo(() => {
     return timeToPixels(getMaxSourceDurationFrames(item), scale.zoom) - 4;
@@ -34,6 +35,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const getDragStyle = () => {
     const baseLeft = timeToPixels(item.start, scale.zoom);
     const baseWidth = timeToPixels(item.duration, scale.zoom) - 4;
+    const baseTop = item.row * TIMELINE_ROW_HEIGHT;
     const pixelsPerFrame = scale.zoom * 188; // PREVIEW_FRAME_WIDTH
     const minDurationPx = pixelsPerFrame; // Minimum 1 frame
 
@@ -41,7 +43,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
       return {
         left: `${baseLeft}px`,
         width: `${baseWidth}px`,
-        top: `${item.row * 44}px`
+        top: `${baseTop}px`
       };
     }
 
@@ -62,7 +64,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
         return {
           left: `${newLeft}px`,
           width: `${baseWidth - actualDelta}px`,
-          top: `${item.row * 44}px`
+          top: `${baseTop}px`
         };
       } else {
         // Resizing from right: only adjust width
@@ -78,17 +80,31 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
         return {
           left: `${baseLeft}px`,
           width: `${baseWidth + constrainedDelta}px`,
-          top: `${item.row * 44}px`
+          top: `${baseTop}px`
         };
       }
     } else {
       // Moving: apply delta to position but constrain to >= 0
       const newLeft = Math.max(0, baseLeft + dragState.delta.x);
 
+      // Calculate the maximum allowed row (including current item)
+      const maxRow = allTimelineItems.reduce(
+        (max, i) => Math.max(max, i.row),
+        0
+      );
+      const maxAllowedRow = maxRow + 1;
+      const maxAllowedTop = maxAllowedRow * TIMELINE_ROW_HEIGHT;
+
+      // Constrain the new top position to available rows
+      const newTop = Math.max(
+        0,
+        Math.min(baseTop + dragState.delta.y, maxAllowedTop)
+      );
+
       return {
         left: `${newLeft}px`,
         width: `${baseWidth}px`,
-        top: `${item.row * 44}px`
+        top: `${newTop}px`
       };
     }
   };
@@ -97,7 +113,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
     <Draggable
       key={item.id}
       id={item.id}
-      className="absolute"
+      className="absolute cursor-move"
       style={getDragStyle()}
     >
       <div

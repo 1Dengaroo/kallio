@@ -11,6 +11,9 @@ export const DEFAULT_SCALE: Scale = {
 // Timeline left offset in pixels
 export const TIMELINE_OFFSET_X = 40;
 
+// Timeline row height in pixels
+export const TIMELINE_ROW_HEIGHT = 44;
+
 export const PREVIEW_FRAME_WIDTH = 188;
 export const FRAME_INTERVAL = 1000 / DEFAULT_FRAMERATE;
 

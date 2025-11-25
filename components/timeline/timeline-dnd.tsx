@@ -11,7 +11,7 @@ import {
   DragMoveEvent
 } from '@dnd-kit/core';
 import { useVideoEditor } from '@/context/video-editor-context';
-import { PREVIEW_FRAME_WIDTH } from '@/constants';
+import { PREVIEW_FRAME_WIDTH, TIMELINE_ROW_HEIGHT } from '@/constants';
 import { getMaxSourceDurationFrames } from '@/utils/timeline';
 
 interface TimelineDndWrapperProps {
@@ -34,12 +34,8 @@ export const TimelineDnd: FC<TimelineDndWrapperProps> = ({
   children,
   scrollLeft = 0
 }) => {
-  const {
-    updateItemPosition,
-    updateItemStartAndDuration,
-    scale,
-    allTimelineItems
-  } = useVideoEditor();
+  const { updateItemStartAndDuration, updateItemRow, scale, allTimelineItems } =
+    useVideoEditor();
   const [dragState, setDragState] = useState<DragState | null>(null);
 
   const sensors = useSensors(
@@ -154,17 +150,33 @@ export const TimelineDnd: FC<TimelineDndWrapperProps> = ({
 
       if (!item) return;
 
+      // Calculate the maximum row from all items (including current item at its old position)
+      const maxRow = allTimelineItems.reduce(
+        (max, i) => Math.max(max, i.row),
+        0
+      );
+
+      // Maximum allowed row is one row below the highest occupied row
+      // This ensures there's always one empty row available
+      const maxAllowedRow = maxRow + 1;
+
       // Get the original position in pixels
       const originalLeftPx = item.start * pixelsPerFrame;
+      const originalTopPx = item.row * TIMELINE_ROW_HEIGHT;
 
       // Calculate new position in pixels
       const newLeftPx = originalLeftPx + delta.x;
+      const newTopPx = originalTopPx + delta.y;
 
       // Convert pixels to frames
       const newStartFrame = Math.max(0, Math.round(newLeftPx / pixelsPerFrame));
 
-      // Update the item position
-      updateItemPosition(itemId, newStartFrame);
+      // Calculate new row and constrain it to available rows
+      const calculatedRow = Math.round(newTopPx / TIMELINE_ROW_HEIGHT);
+      const newRow = Math.max(0, Math.min(calculatedRow, maxAllowedRow));
+
+      // Update the item position and row atomically
+      updateItemRow(itemId, newStartFrame, newRow);
     }
   };
 

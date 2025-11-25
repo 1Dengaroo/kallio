@@ -9,7 +9,11 @@ import { TimelineDnd } from './timeline-dnd';
 import { useVideoEditor } from '../../context/video-editor-context';
 import Ruler from './ruler';
 import { timeToPixels, unitsToTimeMs } from '@/utils/timeline';
-import { DEFAULT_FRAMERATE, TIMELINE_OFFSET_X } from '@/constants';
+import {
+  DEFAULT_FRAMERATE,
+  TIMELINE_OFFSET_X,
+  TIMELINE_ROW_HEIGHT
+} from '@/constants';
 
 interface TimelineProps {}
 
@@ -24,6 +28,15 @@ export const Timeline: React.FC<TimelineProps> = () => {
   const timelineWidthPx = useMemo(() => {
     return timeToPixels(totalDuration, scale.zoom);
   }, [totalDuration, timeToPixels]);
+
+  // Calculate number of rows needed (max row + 2 to always have an empty row below)
+  const numRows = useMemo(() => {
+    const maxRow = allTimelineItems.reduce(
+      (max, item) => Math.max(max, item.row),
+      0
+    );
+    return maxRow + 2; // +1 for the row after max, +1 for empty row below
+  }, [allTimelineItems]);
 
   // Handle scroll events
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -54,25 +67,32 @@ export const Timeline: React.FC<TimelineProps> = () => {
             <div className="absolute inset-0">
               <div
                 ref={scrollContainerRef}
-                className="absolute top-0 left-0 right-0 bottom-0 overflow-x-auto overflow-y-visible pt-2"
+                className="absolute top-0 left-0 right-0 bottom-0 overflow-x-auto overflow-y-auto pt-2"
                 onScroll={handleScroll}
               >
                 <div
                   className="gap-4"
                   style={{
                     width: `${Math.max(timelineWidthPx, 2000)}px`,
-                    height: '100%',
+                    height: `${numRows * TIMELINE_ROW_HEIGHT + 8}px`,
                     position: 'relative',
                     minWidth: '100%',
                     marginInline: `${TIMELINE_OFFSET_X}px`
                   }}
                 >
-                  {/* Background */}
-                  <div className="h-10 inset-0 flex flex-col z-0">
-                    <div className="flex-grow flex flex-col p-[2px]">
-                      <div className="flex-grow bg-gradient-to-b from-muted to-muted/50 rounded-sm" />
+                  {/* Row backgrounds */}
+                  {Array.from({ length: numRows }).map((_, rowIndex) => (
+                    <div
+                      key={rowIndex}
+                      className="absolute left-0 right-0 z-0 p-[2px]"
+                      style={{
+                        top: `${rowIndex * TIMELINE_ROW_HEIGHT}px`,
+                        height: `${TIMELINE_ROW_HEIGHT}px`
+                      }}
+                    >
+                      <div className="h-10 bg-gradient-to-b from-muted to-muted/50 rounded-sm" />
                     </div>
-                  </div>
+                  ))}
                   {allTimelineItems.map((item, index) => (
                     <TimelineItem
                       key={item.id}

@@ -22,12 +22,12 @@ interface VideoEditorContextType {
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
-  updateItemPosition: (itemId: string, newStart: number) => void;
   updateItemStartAndDuration: (
     itemId: string,
     newStart: number,
     newDuration: number
   ) => void;
+  updateItemRow: (itemId: string, newStart: number, newRow: number) => void;
   setScale: (scale: Scale) => void;
 }
 
@@ -127,26 +127,6 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     updateTotalDuration(clips, updatedOverlays);
   }, [clips, textOverlays, updateTotalDuration]);
 
-  const updateItemPosition = useCallback(
-    (itemId: string, newStart: number) => {
-      // Ensure start is not negative
-      const clampedStart = Math.max(0, newStart);
-
-      // Update the item in clips or textOverlays
-      const updatedClips = clips.map((clip) =>
-        clip.id === itemId ? { ...clip, start: clampedStart } : clip
-      );
-      const updatedTextOverlays = textOverlays.map((overlay) =>
-        overlay.id === itemId ? { ...overlay, start: clampedStart } : overlay
-      );
-
-      setClips(updatedClips);
-      setTextOverlays(updatedTextOverlays);
-      updateTotalDuration(updatedClips, updatedTextOverlays);
-    },
-    [clips, textOverlays, updateTotalDuration]
-  );
-
   const updateItemStartAndDuration = useCallback(
     (itemId: string, newStart: number, newDuration: number) => {
       // Ensure start is not negative and duration is at least 1 frame
@@ -172,6 +152,31 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [clips, textOverlays, updateTotalDuration]
   );
 
+  const updateItemRow = useCallback(
+    (itemId: string, newStart: number, newRow: number) => {
+      // Ensure start is not negative and row is not negative
+      const clampedStart = Math.max(0, newStart);
+      const clampedRow = Math.max(0, newRow);
+
+      // Update the item in clips or textOverlays
+      const updatedClips = clips.map((clip) =>
+        clip.id === itemId
+          ? { ...clip, start: clampedStart, row: clampedRow }
+          : clip
+      );
+      const updatedTextOverlays = textOverlays.map((overlay) =>
+        overlay.id === itemId
+          ? { ...overlay, start: clampedStart, row: clampedRow }
+          : overlay
+      );
+
+      setClips(updatedClips);
+      setTextOverlays(updatedTextOverlays);
+      updateTotalDuration(updatedClips, updatedTextOverlays);
+    },
+    [clips, textOverlays, updateTotalDuration]
+  );
+
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
@@ -182,8 +187,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     scale,
     addTextOverlay,
     setPlayerRef,
-    updateItemPosition,
     updateItemStartAndDuration,
+    updateItemRow,
     setScale
   };
 
