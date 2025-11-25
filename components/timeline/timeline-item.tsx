@@ -19,7 +19,10 @@ interface TimelineItemProps {
 
 export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const dragState = useDragState();
-  const { scale, allTimelineItems } = useVideoEditor();
+  const { scale, allTimelineItems, selectedItem, setSelectedItem } =
+    useVideoEditor();
+
+  const isSelected = selectedItem?.id === item.id;
 
   const bgColor =
     type === 'clip'
@@ -109,6 +112,11 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
     }
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    setSelectedItem(isSelected ? null : item);
+    e.stopPropagation();
+  };
+
   return (
     <Draggable
       key={item.id}
@@ -121,8 +129,10 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
         className={cn(
           'absolute h-10 rounded-md transition-all w-full',
           'hover:opacity-90',
-          bgColor
+          bgColor,
+          isSelected && 'ring ring-offset-2 ring-primary'
         )}
+        onClick={handleClick}
       >
         <div className="absolute inset-0 flex items-center justify-center text-xs text-primary-foreground font-semibold pointer-events-none">
           {type.charAt(0).toUpperCase() + type.slice(1)} {index + 1}

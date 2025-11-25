@@ -19,6 +19,7 @@ interface VideoEditorContextType {
   totalDuration: number;
   playerRef: React.RefObject<PlayerRef> | null;
   scale: Scale;
+  selectedItem: TimelineItemType | null;
   addClip: () => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
@@ -29,6 +30,7 @@ interface VideoEditorContextType {
   ) => void;
   updateItemRow: (itemId: string, newStart: number, newRow: number) => void;
   setScale: (scale: Scale) => void;
+  setSelectedItem: (item: TimelineItemType | null) => void;
 }
 
 const VideoEditorContext = createContext<VideoEditorContextType | undefined>(
@@ -55,6 +57,9 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const [totalDuration, setTotalDuration] = useState(1);
   const [scale, setScale] = useState<Scale>(DEFAULT_SCALE);
   const [playerRef, setPlayerRef] = useState<React.RefObject<PlayerRef> | null>(
+    null
+  );
+  const [selectedItem, setSelectedItem] = useState<TimelineItemType | null>(
     null
   );
 
@@ -185,11 +190,13 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     playerRef,
     addClip,
     scale,
+    selectedItem,
     addTextOverlay,
     setPlayerRef,
     updateItemStartAndDuration,
     updateItemRow,
-    setScale
+    setScale,
+    setSelectedItem
   };
 
   return (

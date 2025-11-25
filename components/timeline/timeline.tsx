@@ -22,7 +22,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const { allTimelineItems, totalDuration, playerRef, scale } =
+  const { allTimelineItems, totalDuration, playerRef, scale, setSelectedItem } =
     useVideoEditor();
 
   // Calculate total timeline width in pixels
@@ -50,8 +50,15 @@ export const Timeline: React.FC<TimelineProps> = () => {
     playerRef?.current?.seekTo((time * DEFAULT_FRAMERATE) / 1000);
   };
 
+  const handleTimelineClick = useCallback(() => {
+    setSelectedItem(null);
+  }, [setSelectedItem]);
+
   return (
-    <Card className="border-t rounded-none border-x-0 border-b-0 h-full disable-horizontal-overscroll">
+    <Card
+      className="border-t rounded-none border-x-0 border-b-0 h-full disable-horizontal-overscroll"
+      onClick={handleTimelineClick}
+    >
       <div className="flex flex-col h-full overflow-hidden relative">
         {/* Actions Bar */}
         <TimelineActions />
