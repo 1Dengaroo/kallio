@@ -31,6 +31,9 @@ interface VideoEditorContextType {
   updateItemRow: (itemId: string, newStart: number, newRow: number) => void;
   setScale: (scale: Scale) => void;
   setSelectedItem: (item: TimelineItemType | null) => void;
+  duplicateItem: (itemId: string) => void;
+  deleteItem: (itemId: string) => void;
+  splitItem: (itemId: string, splitFrame: number) => void;
 }
 
 const VideoEditorContext = createContext<VideoEditorContextType | undefined>(
@@ -159,9 +162,9 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
   const updateItemRow = useCallback(
     (itemId: string, newStart: number, newRow: number) => {
-      // Ensure start is not negative and row is not negative
-      const clampedStart = Math.max(0, newStart);
-      const clampedRow = Math.max(0, newRow);
+      // Ensure start is not negative, row is not negative, and both are integers
+      const clampedStart = Math.round(Math.max(0, newStart));
+      const clampedRow = Math.round(Math.max(0, newRow));
 
       // Update the item in clips or textOverlays
       const updatedClips = clips.map((clip) =>
@@ -182,6 +185,117 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [clips, textOverlays, updateTotalDuration]
   );
 
+  const duplicateItem = useCallback(
+    (itemId: string) => {
+      const item = allTimelineItems.find((i) => i.id === itemId);
+      if (!item) return;
+
+      // Find the end of all items to place the duplicate (ensure integer)
+      const endPosition = Math.round(
+        allTimelineItems.reduce(
+          (max, i) => Math.max(max, i.start + i.duration),
+          0
+        )
+      );
+
+      if ('src' in item) {
+        // It's a clip
+        const newClip: Clip = {
+          ...item,
+          id: `clip-${Date.now()}`,
+          start: endPosition,
+          row: 0
+        };
+        const updatedClips = [...clips, newClip];
+        setClips(updatedClips);
+        updateTotalDuration(updatedClips, textOverlays);
+      } else {
+        // It's a text overlay
+        const newOverlay: TextOverlay = {
+          ...item,
+          id: `text-${Date.now()}`,
+          start: endPosition,
+          row: 0
+        };
+        const updatedOverlays = [...textOverlays, newOverlay];
+        setTextOverlays(updatedOverlays);
+        updateTotalDuration(clips, updatedOverlays);
+      }
+    },
+    [clips, textOverlays, allTimelineItems, updateTotalDuration]
+  );
+
+  const deleteItem = useCallback(
+    (itemId: string) => {
+      const updatedClips = clips.filter((clip) => clip.id !== itemId);
+      const updatedTextOverlays = textOverlays.filter(
+        (overlay) => overlay.id !== itemId
+      );
+
+      setClips(updatedClips);
+      setTextOverlays(updatedTextOverlays);
+      updateTotalDuration(updatedClips, updatedTextOverlays);
+      setSelectedItem(null);
+    },
+    [clips, textOverlays, updateTotalDuration]
+  );
+
+  const splitItem = useCallback(
+    (itemId: string, splitFrame: number) => {
+      const item = allTimelineItems.find((i) => i.id === itemId);
+      if (!item) return;
+
+      // Calculate split point relative to item start (ensure integer)
+      const splitPoint = Math.round(splitFrame - item.start);
+
+      // Ensure split point is within the item bounds
+      if (splitPoint <= 0 || splitPoint >= item.duration) return;
+
+      if ('src' in item) {
+        // It's a clip
+        const firstPart: Clip = {
+          ...item,
+          duration: Math.round(splitPoint)
+        };
+        const secondPart: Clip = {
+          ...item,
+          id: `clip-${Date.now()}`,
+          start: Math.round(item.start + splitPoint),
+          duration: Math.round(item.duration - splitPoint)
+        };
+
+        const updatedClips = clips.map((clip) =>
+          clip.id === itemId ? firstPart : clip
+        );
+        updatedClips.push(secondPart);
+
+        setClips(updatedClips);
+        updateTotalDuration(updatedClips, textOverlays);
+      } else {
+        // It's a text overlay
+        const firstPart: TextOverlay = {
+          ...item,
+          duration: Math.round(splitPoint)
+        };
+        const secondPart: TextOverlay = {
+          ...item,
+          id: `text-${Date.now()}`,
+          start: Math.round(item.start + splitPoint),
+          duration: Math.round(item.duration - splitPoint)
+        };
+
+        const updatedOverlays = textOverlays.map((overlay) =>
+          overlay.id === itemId ? firstPart : overlay
+        );
+        updatedOverlays.push(secondPart);
+
+        setTextOverlays(updatedOverlays);
+        updateTotalDuration(clips, updatedOverlays);
+      }
+    },
+    [clips, textOverlays, allTimelineItems, updateTotalDuration]
+  );
+
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
@@ -196,7 +310,10 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     updateItemStartAndDuration,
     updateItemRow,
     setScale,
-    setSelectedItem
+    setSelectedItem,
+    duplicateItem,
+    deleteItem,
+    splitItem
   };
 
   return (
