@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { TimelineMarker } from './timeline-marker';
 import { TimelineItem } from './timeline-item';
 import { TimelineDnd } from './timeline-dnd';
+import { TimelineActions } from './timeline-actions';
 import { useVideoEditor } from '../../context/video-editor-context';
 import Ruler from './ruler';
 import { timeToPixels, unitsToTimeMs } from '@/utils/timeline';
@@ -52,8 +53,11 @@ export const Timeline: React.FC<TimelineProps> = () => {
   return (
     <Card className="border-t rounded-none border-x-0 border-b-0 h-full disable-horizontal-overscroll">
       <div className="flex flex-col h-full overflow-hidden relative">
+        {/* Actions Bar */}
+        <TimelineActions />
         {/* Ruler */}
         <Ruler onClick={onClickRuler} scrollLeft={scrollLeft} />
+        {/* Marker */}
         <TimelineMarker scrollLeft={scrollLeft} />
         {/* Timeline items */}
         <div

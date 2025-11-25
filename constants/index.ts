@@ -19,3 +19,6 @@ export const FRAME_INTERVAL = 1000 / DEFAULT_FRAMERATE;
 
 // Maximum source duration in frames (30 minutes at 60fps)
 export const MAX_SOURCE_DURATION_FRAMES = 1800 * DEFAULT_FRAMERATE;
+
+// Actions bar height in pixels
+export const ACTIONS_BAR_HEIGHT = 44;

@@ -65,3 +65,43 @@ export const getMaxSourceDurationFrames = (item: TimelineItemType): number => {
   }
   return MAX_SOURCE_DURATION_FRAMES;
 };
+
+// Calculate optimal ruler scale based on zoom level
+// Returns unit (in frames) and segments that maintain readable spacing
+export const calculateRulerScale = (zoom: number) => {
+  // Target spacing in pixels for major marks (approximately)
+  const targetSpacing = 120;
+
+  // Calculate what unit would give us the target spacing
+  // spacing = unit * zoom * PREVIEW_FRAME_WIDTH
+  const idealUnit = targetSpacing / (zoom * PREVIEW_FRAME_WIDTH);
+
+  const intervals = [
+    { frames: 6, segments: 6 }, // 0.1 seconds (6 frames)
+    { frames: 12, segments: 6 }, // 0.2 seconds (12 frames)
+    { frames: 30, segments: 6 }, // 0.5 seconds (30 frames)
+    { frames: 60, segments: 10 }, // 1 second (60 frames)
+    { frames: 120, segments: 10 }, // 2 seconds (120 frames)
+    { frames: 300, segments: 10 }, // 5 seconds (300 frames)
+    { frames: 600, segments: 10 }, // 10 seconds (600 frames)
+    { frames: 1800, segments: 10 }, // 30 seconds (1800 frames)
+    { frames: 3600, segments: 10 } // 1 minute (3600 frames)
+  ];
+
+  // Find the interval closest to our ideal unit
+  let bestInterval = intervals[0];
+  let bestDiff = Math.abs(idealUnit - intervals[0].frames);
+
+  for (const interval of intervals) {
+    const diff = Math.abs(idealUnit - interval.frames);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      bestInterval = interval;
+    }
+  }
+
+  return {
+    unit: bestInterval.frames,
+    segments: bestInterval.segments
+  };
+};
