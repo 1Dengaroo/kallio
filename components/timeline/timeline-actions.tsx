@@ -175,7 +175,7 @@ export const TimelineActions = () => {
         </div>
 
         {/* Middle - player controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -195,10 +195,13 @@ export const TimelineActions = () => {
               <p>{isPlaying ? 'Pause' : 'Play'}</p>
             </TooltipContent>
           </Tooltip>
-          <span className="text-sm font-mono">
-            {convertFramesToTimeString(currentFrame)} |{' '}
-            {convertFramesToTimeString(totalDuration)}
-          </span>
+          <div className="text-xs font-mono">
+            <span>{convertFramesToTimeString(currentFrame)}</span>
+            <span className="text-muted-foreground"> | </span>
+            <span className="text-muted-foreground">
+              {convertFramesToTimeString(totalDuration)}
+            </span>
+          </div>
         </div>
 
         {/* Right side - scale controls */}

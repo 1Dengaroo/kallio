@@ -5,7 +5,7 @@ export const DEFAULT_FRAMERATE = 60;
 export const DEFAULT_SCALE: Scale = {
   unit: 60,
   zoom: 1 / 90,
-  segments: 10
+  segments: 5
 };
 
 // Timeline left offset in pixels

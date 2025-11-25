@@ -78,15 +78,15 @@ export const calculateRulerScale = (zoom: number) => {
   const idealUnit = targetSpacing / (zoom * PREVIEW_FRAME_WIDTH);
 
   const intervals = [
-    { frames: 6, segments: 6 }, // 0.1 seconds (6 frames)
-    { frames: 12, segments: 6 }, // 0.2 seconds (12 frames)
-    { frames: 30, segments: 6 }, // 0.5 seconds (30 frames)
-    { frames: 60, segments: 10 }, // 1 second (60 frames)
-    { frames: 120, segments: 10 }, // 2 seconds (120 frames)
-    { frames: 300, segments: 10 }, // 5 seconds (300 frames)
-    { frames: 600, segments: 10 }, // 10 seconds (600 frames)
-    { frames: 1800, segments: 10 }, // 30 seconds (1800 frames)
-    { frames: 3600, segments: 10 } // 1 minute (3600 frames)
+    { frames: 6, segments: 5 }, // 0.1 seconds (6 frames)
+    { frames: 12, segments: 5 }, // 0.2 seconds (12 frames)
+    { frames: 30, segments: 5 }, // 0.5 seconds (30 frames)
+    { frames: 60, segments: 5 }, // 1 second (60 frames)
+    { frames: 120, segments: 5 }, // 2 seconds (120 frames)
+    { frames: 300, segments: 5 }, // 5 seconds (300 frames)
+    { frames: 600, segments: 5 }, // 10 seconds (600 frames)
+    { frames: 1800, segments: 5 }, // 30 seconds (1800 frames)
+    { frames: 3600, segments: 5 } // 1 minute (3600 frames)
   ];
 
   // Find the interval closest to our ideal unit
