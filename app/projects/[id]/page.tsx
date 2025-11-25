@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <div className="h-screen flex flex-col">
       <ResizablePanelGroup direction="vertical">
-        <ResizablePanel defaultSize={70} minSize={30}>
+        <ResizablePanel defaultSize={60} minSize={30}>
           <div className="bg-background h-full flex flex-col items-center justify-center">
             <VideoPlayer />
           </div>
@@ -20,7 +20,7 @@ export default function Page() {
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={30} minSize={20}>
+        <ResizablePanel defaultSize={40} minSize={20}>
           <Timeline />
         </ResizablePanel>
       </ResizablePanelGroup>

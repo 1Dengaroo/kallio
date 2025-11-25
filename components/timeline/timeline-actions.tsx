@@ -1,6 +1,16 @@
 'use client';
 
-import { Minus, Plus, Copy, Scissors, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  Minus,
+  Plus,
+  Copy,
+  Scissors,
+  Trash2,
+  Play,
+  Pause,
+  Maximize
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -9,7 +19,10 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { useVideoEditor } from '@/context/video-editor-context';
-import { calculateRulerScale } from '@/utils/timeline';
+import {
+  calculateRulerScale,
+  convertFramesToTimeString
+} from '@/utils/timeline';
 import { ACTIONS_BAR_HEIGHT, TIMELINE_OFFSET_X } from '@/constants';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
 
@@ -21,9 +34,11 @@ export const TimelineActions = () => {
     duplicateItem,
     deleteItem,
     splitItem,
-    playerRef
+    playerRef,
+    totalDuration
   } = useVideoEditor();
   const currentFrame = useCurrentPlayerFrame(playerRef);
+  const [isPlaying, setPlaying] = useState(false);
 
   const handleZoomIn = () => {
     // Increase zoom by 20%
@@ -64,6 +79,39 @@ export const TimelineActions = () => {
       splitItem(selectedItem.id, currentFrame);
     }
   };
+
+  const handlePlayPause = () => {
+    if (playerRef?.current) {
+      if (isPlaying) {
+        playerRef.current.pause();
+      } else {
+        playerRef.current.play();
+      }
+    }
+  };
+
+  const handleFullscreen = () => {
+    if (playerRef?.current) {
+      playerRef.current.requestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    playerRef?.current?.addEventListener('play', () => {
+      setPlaying(true);
+    });
+    playerRef?.current?.addEventListener('pause', () => {
+      setPlaying(false);
+    });
+    return () => {
+      playerRef?.current?.removeEventListener('play', () => {
+        setPlaying(true);
+      });
+      playerRef?.current?.removeEventListener('pause', () => {
+        setPlaying(false);
+      });
+    };
+  }, [playerRef]);
 
   return (
     <TooltipProvider>
@@ -126,7 +174,7 @@ export const TimelineActions = () => {
           </Tooltip>
         </div>
 
-        {/* Right side - scale controls */}
+        {/* Middle - player controls */}
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -134,31 +182,75 @@ export const TimelineActions = () => {
                 variant="outline"
                 size="icon"
                 className="h-7 w-7"
-                onClick={handleZoomOut}
+                onClick={handlePlayPause}
               >
-                <Minus className="h-3.5 w-3.5" />
+                {isPlaying ? (
+                  <Pause className="h-3.5 w-3.5" />
+                ) : (
+                  <Play className="h-3.5 w-3.5" />
+                )}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Zoom out</p>
+              <p>{isPlaying ? 'Pause' : 'Play'}</p>
             </TooltipContent>
           </Tooltip>
-          <span className="text-xs font-mono min-w-[3rem] text-center">
-            {Math.round((scale.zoom / (1 / 90)) * 100)}%
+          <span className="text-sm font-mono">
+            {convertFramesToTimeString(currentFrame)} |{' '}
+            {convertFramesToTimeString(totalDuration)}
           </span>
+        </div>
+
+        {/* Right side - scale controls */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={handleZoomOut}
+                >
+                  <Minus className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Zoom out</p>
+              </TooltipContent>
+            </Tooltip>
+            <span className="text-xs font-mono min-w-[3rem] text-center">
+              {Math.round((scale.zoom / (1 / 90)) * 100)}%
+            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={handleZoomIn}
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Zoom in</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
                 className="h-7 w-7"
-                onClick={handleZoomIn}
+                onClick={handleFullscreen}
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Maximize className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Zoom in</p>
+              <p>Fullscreen</p>
             </TooltipContent>
           </Tooltip>
         </div>

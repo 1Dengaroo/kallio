@@ -1,12 +1,14 @@
 import { CallbackListener, PlayerRef } from '@remotion/player';
-import { useCallback, useSyncExternalStore } from 'react';
+import { RefObject, useCallback, useSyncExternalStore } from 'react';
 
 /**
  * Safely gets the current frame from a player reference
  * @param playerRef - The player reference
  * @returns The current frame as a finite number, or 0 if invalid
  */
-const getSafeCurrentFrame = (playerRef: any): number => {
+const getSafeCurrentFrame = (
+  playerRef: RefObject<PlayerRef> | null
+): number => {
   try {
     if (!playerRef?.current) {
       return 0;

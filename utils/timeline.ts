@@ -1,7 +1,8 @@
 import {
   FRAME_INTERVAL,
   PREVIEW_FRAME_WIDTH,
-  MAX_SOURCE_DURATION_FRAMES
+  MAX_SOURCE_DURATION_FRAMES,
+  DEFAULT_FRAMERATE
 } from '@/constants';
 import { isClip, isTextOverlay } from '@/types/guards';
 import { TimelineItemType } from '@/types';
@@ -104,4 +105,14 @@ export const calculateRulerScale = (zoom: number) => {
     unit: bestInterval.frames,
     segments: bestInterval.segments
   };
+};
+
+export const convertFramesToTimeString = (
+  frames: number,
+  fps: number = DEFAULT_FRAMERATE
+): string => {
+  const totalSeconds = Math.floor(frames / fps);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };

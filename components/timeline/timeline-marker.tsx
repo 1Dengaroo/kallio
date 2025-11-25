@@ -24,9 +24,7 @@ export const TimelineMarker = React.memo<TimelineMarkerProps>(
 
     return (
       <div
-        className={cn(
-          'absolute w-[1.4px] bg-destructive pointer-events-none z-50'
-        )}
+        className={cn('absolute w-[1.4px] pointer-events-none z-50')}
         style={{
           left: markerPosition,
           transform: 'translateX(-50%)',
@@ -35,12 +33,15 @@ export const TimelineMarker = React.memo<TimelineMarkerProps>(
         }}
       >
         <div
-          className={cn(
-            'w-0 h-0 absolute top-0 left-1/2 transform -translate-x-1/2',
-            'border-l-[8px] border-r-[8px] border-t-[12px]',
-            'border-l-transparent border-r-transparent border-t-destructive'
-          )}
+          style={{
+            borderRadius: '0 0 4px 4px'
+          }}
+          className="absolute top-0 h-4 w-2 -translate-x-1/2 transform bg-white text-xs font-semibold text-zinc-800"
         />
+        <div className="relative h-full">
+          <div className="absolute top-0 h-full w-3 -translate-x-1/2 transform" />
+          <div className="absolute top-0 h-full w-0.5 -translate-x-1/2 transform bg-white/50" />
+        </div>
       </div>
     );
   }
