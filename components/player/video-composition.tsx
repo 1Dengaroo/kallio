@@ -27,7 +27,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
             {'src' in item ? (
               <Html5Video src={item.src} />
             ) : (
-              <TextOverlayComponent text={item.text} />
+              <TextOverlayComponent item={item} />
             )}
           </Sequence>
         ))}

@@ -34,6 +34,13 @@ interface VideoEditorContextType {
   duplicateItem: (itemId: string) => void;
   deleteItem: (itemId: string) => void;
   splitItem: (itemId: string, splitFrame: number) => void;
+  updateTextOverlayTransform: (
+    itemId: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => void;
 }
 
 const VideoEditorContext = createContext<VideoEditorContextType | undefined>(
@@ -127,7 +134,11 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       start: lastItem.start + lastItem.duration,
       duration: 100,
       text: `Text ${textOverlays.length + 1}`,
-      row: 0
+      row: 0,
+      width: 200,
+      height: 50,
+      x: 100,
+      y: 100
     };
 
     const updatedOverlays = [...textOverlays, newOverlay];
@@ -296,6 +307,16 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [clips, textOverlays, allTimelineItems, updateTotalDuration]
   );
 
+  const updateTextOverlayTransform = useCallback(
+    (itemId: string, x: number, y: number, width: number, height: number) => {
+      const updatedTextOverlays = textOverlays.map((overlay) =>
+        overlay.id === itemId ? { ...overlay, x, y, width, height } : overlay
+      );
+      setTextOverlays(updatedTextOverlays);
+    },
+    [textOverlays]
+  );
+
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
@@ -313,7 +334,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     setSelectedItem,
     duplicateItem,
     deleteItem,
-    splitItem
+    splitItem,
+    updateTextOverlayTransform
   };
 
   return (

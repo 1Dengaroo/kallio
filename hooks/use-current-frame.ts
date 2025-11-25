@@ -7,7 +7,7 @@ import { RefObject, useCallback, useSyncExternalStore } from 'react';
  * @returns The current frame as a finite number, or 0 if invalid
  */
 const getSafeCurrentFrame = (
-  playerRef: RefObject<PlayerRef> | null
+  playerRef: RefObject<PlayerRef | null> | null
 ): number => {
   try {
     if (!playerRef?.current) {
@@ -31,7 +31,7 @@ const getSafeCurrentFrame = (
 };
 
 export const useCurrentPlayerFrame = (
-  ref: React.RefObject<PlayerRef> | null
+  ref: React.RefObject<PlayerRef | null> | null
 ) => {
   const subscribe = useCallback(
     (onStoreChange: () => void) => {

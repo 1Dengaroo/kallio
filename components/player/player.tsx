@@ -1,16 +1,25 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Player, PlayerRef } from '@remotion/player';
 import { cn } from '@/lib/utils';
 import { VideoComposition } from './video-composition';
 import { useVideoEditor } from '../../context/video-editor-context';
 import { DEFAULT_FRAMERATE } from '@/constants';
 import { useKeyboardEvent } from '@/hooks/use-keyboard-event';
+import {
+  COMPOSITION_WIDTH,
+  COMPOSITION_HEIGHT,
+  PLAYER_WIDTH,
+  PLAYER_HEIGHT
+} from '@/constants';
+import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
+import { Overlays } from './video-overlays';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
   const { clips, textOverlays, totalDuration, setPlayerRef } = useVideoEditor();
+  const currentFrame = useCurrentPlayerFrame(playerRef);
 
   const Composition = useCallback(
     () => <VideoComposition clips={clips} textOverlays={textOverlays} />,
@@ -49,20 +58,20 @@ export const VideoPlayer: React.FC = () => {
           'bg-muted/50 border'
         )}
         style={{
-          width: '700px',
-          height: '400px',
+          width: `${PLAYER_WIDTH}px`,
+          height: `${PLAYER_HEIGHT}px`,
           maxWidth: '100%',
-          maxHeight: '100%'
+          maxHeight: '100%',
+          position: 'relative'
         }}
       >
         <Player
           ref={playerRef}
           component={Composition}
           durationInFrames={Math.max(1, totalDuration)}
-          compositionWidth={1920}
-          compositionHeight={1080}
+          compositionWidth={COMPOSITION_WIDTH}
+          compositionHeight={COMPOSITION_HEIGHT}
           fps={DEFAULT_FRAMERATE}
-          controls
           style={{
             width: '100%',
             height: '100%'
@@ -74,6 +83,8 @@ export const VideoPlayer: React.FC = () => {
           )}
           inputProps={{}}
         />
+        {/* Overlays - Used for resizing and moving text and images */}
+        <Overlays textOverlays={textOverlays} currentFrame={currentFrame} />
       </div>
     </div>
   );

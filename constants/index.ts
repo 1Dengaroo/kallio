@@ -22,3 +22,8 @@ export const MAX_SOURCE_DURATION_FRAMES = 1800 * DEFAULT_FRAMERATE;
 
 // Actions bar height in pixels
 export const ACTIONS_BAR_HEIGHT = 44;
+
+export const COMPOSITION_WIDTH = 1920;
+export const COMPOSITION_HEIGHT = 1080;
+export const PLAYER_WIDTH = 700;
+export const PLAYER_HEIGHT = 400;
