@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useMemo } from 'react';
 import { Player, PlayerRef } from '@remotion/player';
 import { cn } from '@/lib/utils';
 import { VideoComposition } from './video-composition';
@@ -21,8 +21,9 @@ export const VideoPlayer: React.FC = () => {
   const { clips, textOverlays, totalDuration, setPlayerRef } = useVideoEditor();
   const currentFrame = useCurrentPlayerFrame(playerRef);
 
-  const Composition = useCallback(
-    () => <VideoComposition clips={clips} textOverlays={textOverlays} />,
+  const component = useMemo(() => VideoComposition, []);
+  const inputProps = useMemo(
+    () => ({ clips, textOverlays }),
     [clips, textOverlays]
   );
 
@@ -67,7 +68,7 @@ export const VideoPlayer: React.FC = () => {
       >
         <Player
           ref={playerRef}
-          component={Composition}
+          component={component}
           durationInFrames={Math.max(1, totalDuration)}
           compositionWidth={COMPOSITION_WIDTH}
           compositionHeight={COMPOSITION_HEIGHT}
@@ -81,7 +82,7 @@ export const VideoPlayer: React.FC = () => {
               <p className="text-muted-foreground">Loading...</p>
             </div>
           )}
-          inputProps={{}}
+          inputProps={inputProps}
         />
         {/* Overlays - Used for resizing and moving text and images */}
         <Overlays textOverlays={textOverlays} currentFrame={currentFrame} />
