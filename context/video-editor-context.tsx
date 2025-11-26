@@ -39,7 +39,8 @@ interface VideoEditorContextType {
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    fontSize: number
   ) => void;
 }
 
@@ -138,7 +139,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       width: 200,
       height: 50,
       x: 100,
-      y: 100
+      y: 100,
+      fontSize: 32
     };
 
     const updatedOverlays = [...textOverlays, newOverlay];
@@ -308,9 +310,18 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   );
 
   const updateTextOverlayTransform = useCallback(
-    (itemId: string, x: number, y: number, width: number, height: number) => {
+    (
+      itemId: string,
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      fontSize: number
+    ) => {
       const updatedTextOverlays = textOverlays.map((overlay) =>
-        overlay.id === itemId ? { ...overlay, x, y, width, height } : overlay
+        overlay.id === itemId
+          ? { ...overlay, x, y, width, height, fontSize }
+          : overlay
       );
       setTextOverlays(updatedTextOverlays);
     },

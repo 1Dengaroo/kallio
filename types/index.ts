@@ -22,6 +22,7 @@ export interface Clip extends BaseTimelineItem {
 export interface TextOverlay extends ResizableTimelineItem {
   type: 'text';
   text: string;
+  fontSize: number;
 }
 
 // Union type for all timeline items

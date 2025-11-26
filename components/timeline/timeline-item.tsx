@@ -9,7 +9,7 @@ import { useDragState } from './timeline-dnd';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { timeToPixels } from '@/utils/timeline';
 import { getMaxSourceDurationFrames } from '@/utils/timeline';
-import { TIMELINE_ROW_HEIGHT } from '@/constants';
+import { TIMELINE_ROW_HEIGHT, PREVIEW_FRAME_WIDTH } from '@/constants';
 
 interface TimelineItemProps {
   item: TimelineItemType;
@@ -19,7 +19,7 @@ interface TimelineItemProps {
 
 export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const dragState = useDragState();
-  const { scale, allTimelineItems, selectedItem, setSelectedItem } =
+  const { scale, allTimelineItems, selectedItem, setSelectedItem, playerRef } =
     useVideoEditor();
 
   const isSelected = selectedItem?.id === item.id;
@@ -113,7 +113,19 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    setSelectedItem(isSelected ? null : item);
+    // Get the mouse position relative to the timeline item
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+
+    // Calculate the frame position based on mouse position
+    const pixelsPerFrame = scale.zoom * PREVIEW_FRAME_WIDTH;
+    const frameOffset = mouseX / pixelsPerFrame;
+    const targetFrame = Math.round(item.start + frameOffset);
+
+    // Move the video player to the target frame
+    playerRef?.current?.seekTo(targetFrame);
+
+    setSelectedItem(item);
     e.stopPropagation();
   };
 

@@ -27,7 +27,7 @@ export const TextOverlayComponent: React.FC<TextOverlayComponentProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '64px',
+        fontSize: `${item.fontSize}px`,
         fontWeight: 'bold',
         color: 'white',
         textShadow: '0 0 5px black',

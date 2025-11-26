@@ -69,8 +69,14 @@ export const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
       } else if (isResizing) {
         const deltaX = e.clientX - resizeStartRef.current.x;
         const deltaY = e.clientY - resizeStartRef.current.y;
-        const newWidth = Math.max(50, resizeStartRef.current.startWidth + deltaX);
-        const newHeight = Math.max(20, resizeStartRef.current.startHeight + deltaY);
+        const newWidth = Math.max(
+          50,
+          resizeStartRef.current.startWidth + deltaX
+        );
+        const newHeight = Math.max(
+          20,
+          resizeStartRef.current.startHeight + deltaY
+        );
         onResize(x, y, newWidth, newHeight);
       }
     },

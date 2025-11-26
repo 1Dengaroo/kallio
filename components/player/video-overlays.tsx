@@ -43,28 +43,37 @@ export const Overlays: React.FC<OverlaysProps> = ({
       }}
       onClick={() => setSelectedItem(null)}
     >
-      {visibleTextOverlays.map((overlay) => (
-        <ResizableWrapper
-          key={overlay.id}
-          x={overlay.x * scaleX}
-          y={overlay.y * scaleY}
-          width={overlay.width * scaleX}
-          height={overlay.height * scaleY}
-          isSelected={selectedItem?.id === overlay.id}
-          onSelect={() => setSelectedItem(overlay)}
-          onResize={(x, y, width, height) => {
-            updateTextOverlayTransform(
-              overlay.id,
-              x / scaleX,
-              y / scaleY,
-              width / scaleX,
-              height / scaleY
-            );
-          }}
-        >
-          <div />
-        </ResizableWrapper>
-      ))}
+      {visibleTextOverlays.map((overlay) => {
+        return (
+          <ResizableWrapper
+            key={overlay.id}
+            x={overlay.x * scaleX}
+            y={overlay.y * scaleY}
+            width={overlay.width * scaleX}
+            height={overlay.height * scaleY}
+            isSelected={selectedItem?.id === overlay.id}
+            onSelect={() => setSelectedItem(overlay)}
+            onResize={(x, y, width, height) => {
+              const newWidth = width / scaleX;
+              const newHeight = height / scaleY;
+
+              const widthScale = newWidth / overlay.width;
+              const newFontSize = overlay.fontSize * widthScale;
+
+              updateTextOverlayTransform(
+                overlay.id,
+                x / scaleX,
+                y / scaleY,
+                newWidth,
+                newHeight,
+                newFontSize
+              );
+            }}
+          >
+            <div />
+          </ResizableWrapper>
+        );
+      })}
     </div>
   );
 };
