@@ -30,3 +30,6 @@ export const PLAYER_HEIGHT = 400;
 
 export const SCALE_X = PLAYER_WIDTH / COMPOSITION_WIDTH;
 export const SCALE_Y = PLAYER_HEIGHT / COMPOSITION_HEIGHT;
+
+// Default text overlay font size
+export const DEFAULT_TEXT_FONT_SIZE = 32;

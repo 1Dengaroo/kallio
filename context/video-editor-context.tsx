@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import type { Clip, TextOverlay, Scale, TimelineItemType } from '@/types';
 import { PlayerRef } from '@remotion/player';
-import { DEFAULT_SCALE } from '@/constants';
+import { DEFAULT_SCALE, DEFAULT_TEXT_FONT_SIZE } from '@/constants';
 
 interface VideoEditorContextType {
   clips: Clip[];
@@ -138,7 +138,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       height: 100,
       x: 100,
       y: 100,
-      fontSize: 32,
+      fontSize: DEFAULT_TEXT_FONT_SIZE,
       font: 'Inter',
       color: '#ffffff',
       borderColor: '#000000',

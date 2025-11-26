@@ -11,7 +11,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { SCALE_X, SCALE_Y } from '@/constants';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { TextOverlay } from '@/types';
 import { calculateTextOverlayDimensions } from '@/lib/utils';
@@ -34,11 +33,18 @@ export const TextOverlayProperties: React.FC<TextOverlayPropertiesProps> = ({
         <Textarea
           id="text"
           value={item.text}
-          onChange={(e) =>
+          onChange={(e) => {
+            const newText = e.target.value;
+            const { width, height } = calculateTextOverlayDimensions(
+              newText,
+              item.fontSize
+            );
             updateTextOverlayProperties(item.id, {
-              text: e.target.value
-            })
-          }
+              text: newText,
+              width,
+              height
+            });
+          }}
           className="min-h-[80px] resize-y"
         />
       </div>
