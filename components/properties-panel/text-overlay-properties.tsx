@@ -2,6 +2,7 @@
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -29,7 +30,7 @@ export const TextOverlayProperties: React.FC<TextOverlayPropertiesProps> = ({
         <Label htmlFor="text" className="text-xs">
           Text
         </Label>
-        <Input
+        <Textarea
           id="text"
           value={item.text}
           onChange={(e) =>
@@ -37,7 +38,7 @@ export const TextOverlayProperties: React.FC<TextOverlayPropertiesProps> = ({
               text: e.target.value
             })
           }
-          className="h-8"
+          className="min-h-[80px] resize-y"
         />
       </div>
 

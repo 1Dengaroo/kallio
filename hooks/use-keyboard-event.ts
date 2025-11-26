@@ -15,6 +15,15 @@ export function useKeyboardEvent(
     const event = eventTypeRef.current;
     const onEvent = (e: Event) => {
       if (e instanceof KeyboardEvent && e.key === keyRef.current) {
+        // Don't trigger if user is typing in an input field
+        const target = e.target as HTMLElement;
+        if (
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable
+        ) {
+          return;
+        }
         callbackRef.current(e);
       }
     };

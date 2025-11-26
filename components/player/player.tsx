@@ -54,7 +54,7 @@ export const VideoPlayer: React.FC = () => {
     <div className="w-full h-full flex items-center justify-center p-6">
       <div
         className={cn(
-          'shadow-lg rounded-lg overflow-hidden',
+          'shadow-lg rounded-lg overflow-visible',
           'bg-muted/50 border'
         )}
         style={{
