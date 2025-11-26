@@ -7,21 +7,32 @@ import {
 } from '@/components/ui/resizable';
 import { VideoPlayer } from '@/components/player';
 import { Timeline } from '@/components/timeline';
+import { PropertiesPanel } from '@/components/properties-panel';
 
 export default function Page() {
   return (
     <div className="h-screen flex flex-col">
-      <ResizablePanelGroup direction="vertical">
-        <ResizablePanel defaultSize={60} minSize={30}>
-          <div className="bg-background h-full flex flex-col items-center justify-center">
-            <VideoPlayer />
-          </div>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <PropertiesPanel />
         </ResizablePanel>
 
-        <ResizableHandle withHandle />
+        <ResizableHandle />
 
-        <ResizablePanel defaultSize={40} minSize={20}>
-          <Timeline />
+        <ResizablePanel defaultSize={80}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel defaultSize={60} minSize={30}>
+              <div className="bg-background h-full flex flex-col items-center justify-center">
+                <VideoPlayer />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle />
+
+            <ResizablePanel defaultSize={40} minSize={20}>
+              <Timeline />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

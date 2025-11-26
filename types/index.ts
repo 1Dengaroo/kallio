@@ -23,6 +23,11 @@ export interface TextOverlay extends ResizableTimelineItem {
   type: 'text';
   text: string;
   fontSize: number;
+  font: string;
+  color: string;
+  borderColor: string;
+  opacity: number;
+  weight: number;
 }
 
 // Union type for all timeline items

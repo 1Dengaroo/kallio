@@ -2,12 +2,7 @@
 
 import { useVideoEditor } from '../../context/video-editor-context';
 import { ResizableWrapper } from '@/components/resizable-wrapper';
-import {
-  COMPOSITION_WIDTH,
-  COMPOSITION_HEIGHT,
-  PLAYER_WIDTH,
-  PLAYER_HEIGHT
-} from '@/constants';
+import { SCALE_X, SCALE_Y } from '@/constants';
 import { TextOverlay } from '@/types';
 
 interface OverlaysProps {
@@ -19,11 +14,8 @@ export const Overlays: React.FC<OverlaysProps> = ({
   textOverlays,
   currentFrame
 }) => {
-  const { updateTextOverlayTransform, selectedItem, setSelectedItem } =
+  const { updateTextOverlayProperties, selectedItem, setSelectedItem } =
     useVideoEditor();
-
-  const scaleX = PLAYER_WIDTH / COMPOSITION_WIDTH;
-  const scaleY = PLAYER_HEIGHT / COMPOSITION_HEIGHT;
 
   const visibleTextOverlays = textOverlays.filter(
     (overlay) =>
@@ -47,27 +39,26 @@ export const Overlays: React.FC<OverlaysProps> = ({
         return (
           <ResizableWrapper
             key={overlay.id}
-            x={overlay.x * scaleX}
-            y={overlay.y * scaleY}
-            width={overlay.width * scaleX}
-            height={overlay.height * scaleY}
+            x={overlay.x * SCALE_X}
+            y={overlay.y * SCALE_Y}
+            width={overlay.width * SCALE_X}
+            height={overlay.height * SCALE_Y}
             isSelected={selectedItem?.id === overlay.id}
             onSelect={() => setSelectedItem(overlay)}
             onResize={(x, y, width, height) => {
-              const newWidth = width / scaleX;
-              const newHeight = height / scaleY;
+              const newWidth = width / SCALE_X;
+              const newHeight = height / SCALE_Y;
 
               const widthScale = newWidth / overlay.width;
               const newFontSize = overlay.fontSize * widthScale;
 
-              updateTextOverlayTransform(
-                overlay.id,
-                x / scaleX,
-                y / scaleY,
-                newWidth,
-                newHeight,
-                newFontSize
-              );
+              updateTextOverlayProperties(overlay.id, {
+                x: x / SCALE_X,
+                y: y / SCALE_Y,
+                width: newWidth,
+                height: newHeight,
+                fontSize: newFontSize
+              });
             }}
           >
             <div />

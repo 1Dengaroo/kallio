@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { ClerkProvider } from '@clerk/nextjs';
 
 import { Sidebar } from '@/components/nav/sidebar';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { VideoEditorProvider } from '@/context/video-editor-context';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -47,10 +47,7 @@ export default function RootLayout({
                 disableTransitionOnChange
               >
                 <Sidebar />
-                <main className="relative w-screen h-screen">
-                  <SidebarTrigger className="absolute top-4 left-4 z-50" />
-                  {children}
-                </main>
+                <main className="relative w-screen h-screen">{children}</main>
               </ThemeProvider>
             </SidebarProvider>
             <Analytics />

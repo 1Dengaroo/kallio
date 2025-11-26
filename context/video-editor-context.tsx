@@ -34,13 +34,11 @@ interface VideoEditorContextType {
   duplicateItem: (itemId: string) => void;
   deleteItem: (itemId: string) => void;
   splitItem: (itemId: string, splitFrame: number) => void;
-  updateTextOverlayTransform: (
+  updateTextOverlayProperties: (
     itemId: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    fontSize: number
+    properties: Partial<
+      Omit<TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
+    >
   ) => void;
 }
 
@@ -140,7 +138,12 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       height: 50,
       x: 100,
       y: 100,
-      fontSize: 32
+      fontSize: 32,
+      font: 'Inter',
+      color: '#ffffff',
+      borderColor: '#000000',
+      opacity: 1,
+      weight: 400
     };
 
     const updatedOverlays = [...textOverlays, newOverlay];
@@ -169,8 +172,17 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       setClips(updatedClips);
       setTextOverlays(updatedTextOverlays);
       updateTotalDuration(updatedClips, updatedTextOverlays);
+
+      // Update selectedItem if it's the item being updated
+      if (selectedItem?.id === itemId) {
+        setSelectedItem({
+          ...selectedItem,
+          start: clampedStart,
+          duration: clampedDuration
+        });
+      }
     },
-    [clips, textOverlays, updateTotalDuration]
+    [clips, textOverlays, updateTotalDuration, selectedItem]
   );
 
   const updateItemRow = useCallback(
@@ -309,23 +321,24 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [clips, textOverlays, allTimelineItems, updateTotalDuration]
   );
 
-  const updateTextOverlayTransform = useCallback(
+  const updateTextOverlayProperties = useCallback(
     (
       itemId: string,
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      fontSize: number
+      properties: Partial<
+        Omit<TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
+      >
     ) => {
       const updatedTextOverlays = textOverlays.map((overlay) =>
-        overlay.id === itemId
-          ? { ...overlay, x, y, width, height, fontSize }
-          : overlay
+        overlay.id === itemId ? { ...overlay, ...properties } : overlay
       );
       setTextOverlays(updatedTextOverlays);
+
+      // Update selectedItem if it's the item being updated
+      if (selectedItem?.id === itemId) {
+        setSelectedItem({ ...selectedItem, ...properties } as TimelineItemType);
+      }
     },
-    [textOverlays]
+    [textOverlays, selectedItem]
   );
 
   const value: VideoEditorContextType = {
@@ -346,7 +359,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     duplicateItem,
     deleteItem,
     splitItem,
-    updateTextOverlayTransform
+    updateTextOverlayProperties
   };
 
   return (

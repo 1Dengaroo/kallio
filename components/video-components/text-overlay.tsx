@@ -12,7 +12,7 @@ export const TextOverlayComponent: React.FC<TextOverlayComponentProps> = ({
   item
 }) => {
   const frame = useCurrentFrame();
-  const opacity = interpolate(frame, [0, 30], [0, 1], {
+  const fadeOpacity = interpolate(frame, [0, 30], [0, 1], {
     extrapolateRight: 'clamp'
   });
 
@@ -28,10 +28,11 @@ export const TextOverlayComponent: React.FC<TextOverlayComponentProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: `${item.fontSize}px`,
-        fontWeight: 'bold',
-        color: 'white',
-        textShadow: '0 0 5px black',
-        opacity
+        fontFamily: item.font,
+        fontWeight: item.weight,
+        color: item.color,
+        textShadow: `0 0 5px ${item.borderColor}`,
+        opacity: fadeOpacity * item.opacity
       }}
     >
       {item.text}
