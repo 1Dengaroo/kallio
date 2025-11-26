@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { SCALE_X, SCALE_Y } from '@/constants';
 import { useVideoEditor } from '@/context/video-editor-context';
 import { TextOverlay } from '@/types';
+import { calculateTextOverlayDimensions } from '@/lib/utils';
 
 interface TextOverlayPropertiesProps {
   item: TextOverlay;
@@ -52,11 +53,18 @@ export const TextOverlayProperties: React.FC<TextOverlayPropertiesProps> = ({
           id="fontSize"
           type="number"
           value={item.fontSize}
-          onChange={(e) =>
+          onChange={(e) => {
+            const newFontSize = Number(e.target.value);
+            const { width, height } = calculateTextOverlayDimensions(
+              item.text,
+              newFontSize
+            );
             updateTextOverlayProperties(item.id, {
-              fontSize: Number(e.target.value)
-            })
-          }
+              fontSize: newFontSize,
+              width,
+              height
+            });
+          }}
           className="h-8"
         />
       </div>
