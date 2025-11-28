@@ -12,12 +12,6 @@ import {
   Maximize
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { useVideoEditor } from '@/context/video-editor-context';
 import {
   calculateRulerScale,
@@ -114,150 +108,106 @@ export const TimelineActions = () => {
   }, [playerRef]);
 
   return (
-    <TooltipProvider>
-      <div
-        className="flex items-center justify-between py-2 border-b border-border bg-background/50"
-        style={{
-          height: ACTIONS_BAR_HEIGHT,
-          paddingInline: TIMELINE_OFFSET_X - 4
-        }}
-      >
-        {/* Left side - item actions */}
-        <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handleDuplicate}
-                disabled={!selectedItem}
-              >
-                <Copy className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Duplicate selected item</p>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handleSplit}
-                disabled={!selectedItem}
-              >
-                <Scissors className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Split selected item at playhead</p>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handleDelete}
-                disabled={!selectedItem}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete selected item</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
+    <div
+      className="flex items-center justify-between py-2 border-b border-border bg-background/50"
+      style={{
+        height: ACTIONS_BAR_HEIGHT,
+        paddingInline: TIMELINE_OFFSET_X - 4
+      }}
+    >
+      {/* Left side - item actions */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleDuplicate}
+          disabled={!selectedItem}
+          tooltip="Duplicate selected item"
+        >
+          <Copy className="h-3.5 w-3.5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleSplit}
+          disabled={!selectedItem}
+          tooltip="Split selected item at playhead"
+        >
+          <Scissors className="h-3.5 w-3.5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleDelete}
+          disabled={!selectedItem}
+          tooltip="Delete selected item"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </Button>
+      </div>
 
-        {/* Middle - player controls */}
-        <div className="flex items-center gap-4">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handlePlayPause}
-              >
-                {isPlaying ? (
-                  <Pause className="h-3.5 w-3.5" />
-                ) : (
-                  <Play className="h-3.5 w-3.5" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{isPlaying ? 'Pause' : 'Play'}</p>
-            </TooltipContent>
-          </Tooltip>
-          <div className="text-xs font-mono">
-            <span>{convertFramesToTimeString(currentFrame)}</span>
-            <span className="text-muted-foreground"> | </span>
-            <span className="text-muted-foreground">
-              {convertFramesToTimeString(totalDuration)}
-            </span>
-          </div>
-        </div>
-
-        {/* Right side - scale controls */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={handleZoomOut}
-                >
-                  <Minus className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Zoom out</p>
-              </TooltipContent>
-            </Tooltip>
-            <span className="text-xs font-mono min-w-[3rem] text-center">
-              {Math.round((scale.zoom / (1 / 90)) * 100)}%
-            </span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={handleZoomIn}
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Zoom in</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={handleFullscreen}
-              >
-                <Maximize className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Fullscreen</p>
-            </TooltipContent>
-          </Tooltip>
+      {/* Middle - player controls */}
+      <div className="flex items-center gap-4">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handlePlayPause}
+          tooltip={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <Pause className="h-3.5 w-3.5" />
+          ) : (
+            <Play className="h-3.5 w-3.5" />
+          )}
+        </Button>
+        <div className="text-xs font-mono">
+          <span>{convertFramesToTimeString(currentFrame)}</span>
+          <span className="text-muted-foreground"> | </span>
+          <span className="text-muted-foreground">
+            {convertFramesToTimeString(totalDuration)}
+          </span>
         </div>
       </div>
-    </TooltipProvider>
+
+      {/* Right side - scale controls */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={handleZoomOut}
+            tooltip="Zoom out"
+          >
+            <Minus className="h-3.5 w-3.5" />
+          </Button>
+          <span className="text-xs font-mono min-w-[3rem] text-center">
+            {Math.round((scale.zoom / (1 / 90)) * 100)}%
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={handleZoomIn}
+            tooltip="Zoom in"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleFullscreen}
+          tooltip="Fullscreen"
+        >
+          <Maximize className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+    </div>
   );
 };
