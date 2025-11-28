@@ -8,9 +8,16 @@ import React, {
   ReactNode,
   useMemo
 } from 'react';
-import type { Clip, TextOverlay, Scale, TimelineItemType } from '@/types';
+import type {
+  Clip,
+  TextOverlay,
+  Scale,
+  TimelineItemType,
+  UploadedClip
+} from '@/types';
 import { PlayerRef } from '@remotion/player';
 import { DEFAULT_SCALE, DEFAULT_TEXT_FONT_SIZE } from '@/constants';
+import { DEFAULT_CLIPS } from '@/lib/sample';
 
 interface VideoEditorContextType {
   clips: Clip[];
@@ -20,7 +27,9 @@ interface VideoEditorContextType {
   playerRef: React.RefObject<PlayerRef> | null;
   scale: Scale;
   selectedItem: TimelineItemType | null;
+  availableClips: UploadedClip[];
   addClip: () => void;
+  addClipFromAvailable: (uploadedClip: UploadedClip) => void;
   addTextOverlay: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
   updateItemStartAndDuration: (
@@ -31,6 +40,7 @@ interface VideoEditorContextType {
   updateItemRow: (itemId: string, newStart: number, newRow: number) => void;
   setScale: (scale: Scale) => void;
   setSelectedItem: (item: TimelineItemType | null) => void;
+  addAvailableClip: (clip: UploadedClip) => void;
   duplicateItem: (itemId: string) => void;
   deleteItem: (itemId: string) => void;
   splitItem: (itemId: string, splitFrame: number) => void;
@@ -71,6 +81,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const [selectedItem, setSelectedItem] = useState<TimelineItemType | null>(
     null
   );
+  const [availableClips, setAvailableClips] =
+    useState<UploadedClip[]>(DEFAULT_CLIPS);
 
   const allTimelineItems = useMemo(
     () => [...clips, ...textOverlays].sort((a, b) => a.start - b.start),
@@ -106,6 +118,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     const newClip: Clip = {
       id: `clip-${clips.length + 1}`,
       type: 'clip',
+      name: `New Clip ${clips.length + 1}`,
       start: lastItem.start + lastItem.duration,
       duration: 300,
       sourceDuration: 900,
@@ -117,6 +130,34 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     setClips(updatedClips);
     updateTotalDuration(updatedClips, textOverlays);
   }, [clips, textOverlays, updateTotalDuration]);
+
+  const addClipFromAvailable = useCallback(
+    (uploadedClip: UploadedClip) => {
+      const lastItem = [...clips, ...textOverlays].reduce(
+        (latest, item) =>
+          item.start + item.duration > latest.start + latest.duration
+            ? item
+            : latest,
+        { start: 0, duration: 0 }
+      );
+
+      const newClip: Clip = {
+        type: 'clip',
+        id: `clip-${Date.now()}`,
+        name: uploadedClip.name,
+        start: lastItem.start + lastItem.duration,
+        duration: uploadedClip.sourceDuration,
+        sourceDuration: uploadedClip.sourceDuration,
+        src: uploadedClip.src,
+        row: 0
+      };
+
+      const updatedClips = [...clips, newClip];
+      setClips(updatedClips);
+      updateTotalDuration(updatedClips, textOverlays);
+    },
+    [clips, textOverlays, updateTotalDuration]
+  );
 
   const addTextOverlay = useCallback(() => {
     const lastItem = [...clips, ...textOverlays].reduce(
@@ -335,11 +376,15 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
       // Update selectedItem if it's the item being updated
       if (selectedItem?.id === itemId) {
-        setSelectedItem({ ...selectedItem, ...properties } as TimelineItemType);
+        setSelectedItem({ ...selectedItem, ...properties });
       }
     },
     [textOverlays, selectedItem]
   );
+
+  const addAvailableClip = useCallback((clip: UploadedClip) => {
+    setAvailableClips((prev) => [...prev, clip]);
+  }, []);
 
   const value: VideoEditorContextType = {
     clips,
@@ -348,14 +393,17 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     totalDuration,
     playerRef,
     addClip,
+    addClipFromAvailable,
     scale,
     selectedItem,
+    availableClips,
     addTextOverlay,
     setPlayerRef,
     updateItemStartAndDuration,
     updateItemRow,
     setScale,
     setSelectedItem,
+    addAvailableClip,
     duplicateItem,
     deleteItem,
     splitItem,

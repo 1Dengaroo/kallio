@@ -1,26 +1,17 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { useVideoEditor } from '@/context/video-editor-context';
 import { TextOverlayProperties } from './text-overlay-properties';
 import { isClip, isTextOverlay } from '@/types/guards';
+import { TimelineItemType } from '@/types';
 
-export const PropertiesPanel = () => {
-  const { selectedItem } = useVideoEditor();
+interface PropertiesPanelProps {
+  selectedItem: TimelineItemType;
+}
 
-  if (!selectedItem) {
-    return (
-      <Card className="h-full rounded-none border-y-0 border-l-0 flex items-center justify-center">
-        <div className="text-center text-muted-foreground p-4">
-          <p className="text-sm">No item selected</p>
-          <p className="text-xs mt-2">
-            Select a timeline item to edit properties
-          </p>
-        </div>
-      </Card>
-    );
-  }
-
+export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
+  selectedItem
+}) => {
   const isText = isTextOverlay(selectedItem);
   const isVideo = isClip(selectedItem);
 

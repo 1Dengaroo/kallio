@@ -3,6 +3,7 @@
 import { useVideoEditor } from '../../context/video-editor-context';
 import { ResizableWrapper } from '@/components/resizable-wrapper';
 import { SCALE_X, SCALE_Y } from '@/constants';
+import { useSidePanel } from '@/context/side-panel-context';
 import { TextOverlay } from '@/types';
 
 interface OverlaysProps {
@@ -14,6 +15,7 @@ export const Overlays: React.FC<OverlaysProps> = ({
   textOverlays,
   currentFrame
 }) => {
+  const { setPropertiesView } = useSidePanel();
   const { updateTextOverlayProperties, selectedItem, setSelectedItem } =
     useVideoEditor();
 
@@ -22,6 +24,11 @@ export const Overlays: React.FC<OverlaysProps> = ({
       currentFrame >= overlay.start &&
       currentFrame < overlay.start + overlay.duration
   );
+
+  const handleSelect = (overlay: TextOverlay) => {
+    setSelectedItem(overlay);
+    setPropertiesView();
+  };
 
   return (
     <div
@@ -44,7 +51,7 @@ export const Overlays: React.FC<OverlaysProps> = ({
             width={overlay.width * SCALE_X}
             height={overlay.height * SCALE_Y}
             isSelected={selectedItem?.id === overlay.id}
-            onSelect={() => setSelectedItem(overlay)}
+            onSelect={() => handleSelect(overlay)}
             onResize={(x, y, width, height) => {
               const newWidth = width / SCALE_X;
               const newHeight = height / SCALE_Y;

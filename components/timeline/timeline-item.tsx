@@ -10,6 +10,7 @@ import { useVideoEditor } from '@/context/video-editor-context';
 import { timeToPixels } from '@/utils/timeline';
 import { getMaxSourceDurationFrames } from '@/utils/timeline';
 import { TIMELINE_ROW_HEIGHT, PREVIEW_FRAME_WIDTH } from '@/constants';
+import { useSidePanel } from '@/context/side-panel-context';
 
 interface TimelineItemProps {
   item: TimelineItemType;
@@ -21,6 +22,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const dragState = useDragState();
   const { scale, allTimelineItems, selectedItem, setSelectedItem, playerRef } =
     useVideoEditor();
+  const { setPropertiesView } = useSidePanel();
 
   const isSelected = selectedItem?.id === item.id;
 
@@ -126,6 +128,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
     playerRef?.current?.seekTo(targetFrame);
 
     setSelectedItem(item);
+    setPropertiesView();
     e.stopPropagation();
   };
 

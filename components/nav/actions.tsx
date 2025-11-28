@@ -12,23 +12,38 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { useVideoEditor } from '@/context/video-editor-context';
+import { useSidePanel } from '@/context/side-panel-context';
+import { UploadedClip } from '@/types';
 
 export function Actions() {
   const pathname = usePathname();
   const isProjectPage = /^\/projects\/[^\/]+$/.test(pathname);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoEditor = useVideoEditor();
+  const { addAvailableClip, addTextOverlay } = useVideoEditor();
+  const { setClipsView } = useSidePanel()!;
 
   if (!isProjectPage) {
     return null;
   }
 
   const handleFileUpload = async (files: File[]) => {
-    const resourceId = 'VMJQit9N0hJaCAss';
+    // Mock upload logic
+    for (const file of files) {
+      const mockClip: UploadedClip = {
+        id: `uploaded-${Date.now()}-${Math.random()}`,
+        name: file.name,
+        src: 'https://hgwavsootdmvmjdvfiwc.supabase.co/storage/v1/object/public/clips/reactvideoeditor-quality.mp4?t=2024-09-03T02%3A09%3A02.395Z',
+        sourceDuration: 900
+      };
+      addAvailableClip(mockClip);
+    }
   };
 
   const handleFileChange = (newFiles: File[]) => {
-    handleFileUpload(newFiles);
+    if (newFiles.length > 0) {
+      handleFileUpload(newFiles);
+      setClipsView();
+    }
   };
 
   const handleUploadClick = () => {
@@ -36,7 +51,7 @@ export function Actions() {
   };
 
   const handleAddClip = () => {
-    videoEditor?.addClip();
+    setClipsView();
   };
 
   const handleAddImage = () => {};
@@ -44,7 +59,7 @@ export function Actions() {
   const handleAddAudio = () => {};
 
   const handleAddText = () => {
-    videoEditor?.addTextOverlay();
+    addTextOverlay();
   };
 
   const actions = [
@@ -58,7 +73,7 @@ export function Actions() {
       name: 'Add Clip',
       onClick: handleAddClip,
       icon: Video,
-      tooltip: 'Add a video clip to the timeline'
+      tooltip: 'View uploaded clips'
     },
     {
       name: 'Add Image',

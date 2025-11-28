@@ -15,10 +15,19 @@ export interface ResizableTimelineItem extends BaseTimelineItem {
 
 export interface Clip extends BaseTimelineItem {
   type: 'clip';
+  name: string;
   /* In frames (FRAMERATE * SECONDS) */
   sourceDuration: number;
   src: string;
 }
+
+export interface UploadedClip {
+  id: string;
+  name: string;
+  sourceDuration: number;
+  src: string;
+}
+
 export interface TextOverlay extends ResizableTimelineItem {
   type: 'text';
   text: string;
