@@ -19,6 +19,7 @@ export interface Clip extends ResizableTimelineItem {
   /* In frames (FRAMERATE * SECONDS) */
   sourceDuration: number;
   src: string;
+  volume: number;
 }
 
 export interface UploadedClip {

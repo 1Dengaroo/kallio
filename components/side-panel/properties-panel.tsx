@@ -1,6 +1,8 @@
 'use client';
 
 import { TextOverlayProperties } from './text-overlay-properties';
+import { AudioProperties } from './audio-properties';
+import { VideoProperties } from './video-properties';
 import { isClip, isTextOverlay, isAudio } from '@/types/guards';
 import { TimelineItemType } from '@/types';
 import { CardFooter } from '../ui/card';
@@ -20,14 +22,8 @@ export const PropertiesPanelContent: React.FC<PropertiesPanelContentProps> = ({
     <div className="flex flex-col h-full">
       {/* Type-specific properties */}
       {isText && <TextOverlayProperties item={selectedItem} />}
-
-      {(isVideo || isAudioItem) && (
-        <div className="p-4">
-          <p className="text-xs text-muted-foreground">
-            No additional properties available
-          </p>
-        </div>
-      )}
+      {isVideo && <VideoProperties item={selectedItem} />}
+      {isAudioItem && <AudioProperties item={selectedItem} />}
 
       {/* Debug Info */}
       <CardFooter className="px-4 py-3 mt-auto">

@@ -14,11 +14,13 @@ import type {
   Audio,
   Scale,
   TimelineItemType,
-  UploadedClip
+  UploadedClip,
+  ResizableItem
 } from '@/types';
 import { PlayerRef } from '@remotion/player';
 import { DEFAULT_SCALE, DEFAULT_TEXT_FONT_SIZE } from '@/constants';
 import { DEFAULT_CLIPS } from '@/lib/sample';
+import { isClip, isTextOverlay } from '@/types/guards';
 
 interface VideoEditorContextType {
   clips: Clip[];
@@ -59,8 +61,14 @@ interface VideoEditorContextType {
       Omit<Clip, 'id' | 'type' | 'start' | 'duration' | 'row'>
     >
   ) => void;
-  updateResizableItemProperties: (
+  updateAudioProperties: (
     itemId: string,
+    properties: Partial<
+      Omit<Audio, 'id' | 'type' | 'start' | 'duration' | 'row'>
+    >
+  ) => void;
+  updateResizableItemProperties: (
+    item: ResizableItem,
     properties: Partial<
       Omit<Clip | TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
     >
@@ -158,7 +166,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       x: 0,
       y: 0,
       width: 1920,
-      height: 1080
+      height: 1080,
+      volume: 0.8
     };
 
     const updatedClips = [...clips, newClip];
@@ -188,7 +197,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         x: 0,
         y: 0,
         width: 1920,
-        height: 1080
+        height: 1080,
+        volume: 0.8
       };
 
       const updatedClips = [...clips, newClip];
@@ -249,7 +259,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       sourceDuration: 300,
       src: 'https://cdn.designcombo.dev/audio/Hope.mp3',
       row: 0,
-      volume: 1
+      volume: 0.8
     };
 
     const updatedAudio = [...audioTracks, newAudio];
@@ -520,23 +530,37 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [clips, selectedItem]
   );
 
-  const updateResizableItemProperties = useCallback(
+  const updateAudioProperties = useCallback(
     (
       itemId: string,
+      properties: Partial<
+        Omit<Audio, 'id' | 'type' | 'start' | 'duration' | 'row'>
+      >
+    ) => {
+      const updatedAudioTracks = audioTracks.map((audio) =>
+        audio.id === itemId ? { ...audio, ...properties } : audio
+      );
+      setAudioTracks(updatedAudioTracks);
+
+      // Update selectedItem if it's the item being updated
+      if (selectedItem?.id === itemId) {
+        setSelectedItem({ ...selectedItem, ...properties });
+      }
+    },
+    [audioTracks, selectedItem]
+  );
+
+  const updateResizableItemProperties = useCallback(
+    (
+      item: ResizableItem,
       properties: Partial<
         Omit<Clip | TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
       >
     ) => {
-      // Check if it's a clip or text overlay
-      const isClip = clips.some((clip) => clip.id === itemId);
-      const isTextOverlay = textOverlays.some(
-        (overlay) => overlay.id === itemId
-      );
-
-      if (isClip) {
-        updateClipProperties(itemId, properties);
-      } else if (isTextOverlay) {
-        updateTextOverlayProperties(itemId, properties);
+      if (isClip(item)) {
+        updateClipProperties(item.id, properties);
+      } else if (isTextOverlay(item)) {
+        updateTextOverlayProperties(item.id, properties);
       }
     },
     [clips, textOverlays, updateClipProperties, updateTextOverlayProperties]
@@ -571,6 +595,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     splitItem,
     updateTextOverlayProperties,
     updateClipProperties,
+    updateAudioProperties,
     updateResizableItemProperties
   };
 

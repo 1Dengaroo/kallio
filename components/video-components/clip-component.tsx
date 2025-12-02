@@ -22,6 +22,7 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({ item }) => {
     >
       <Html5Video
         src={item.src}
+        volume={item.volume}
         style={{
           width: '100%',
           height: '100%',

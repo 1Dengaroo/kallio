@@ -17,13 +17,13 @@ interface VideoCompositionProps {
   clips: Clip[];
   textOverlays: TextOverlay[];
   audioTracks: Audio[];
-  selectedItem?: TimelineItemType | null;
-  setSelectedItem?: (item: TimelineItemType | null) => void;
-  updateResizableItemProperties?: (
-    id: string,
+  selectedItem: TimelineItemType | null;
+  setSelectedItem: (item: TimelineItemType | null) => void;
+  updateResizableItemProperties: (
+    item: ResizableItem,
     updates: Partial<Clip | TextOverlay>
   ) => void;
-  onSelectItem?: (item: ResizableItem) => void;
+  onSelectItem: (item: ResizableItem) => void;
 }
 
 const displaySelectedItemOnTop = <T extends ResizableItem>(
@@ -85,12 +85,12 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
             durationInFrames={item.duration}
             layout="none"
           >
-            <AbsoluteFill>
+            <AbsoluteFill style={{ pointerEvents: 'none' }}>
               {item.type === 'clip' ? (
                 <ClipComponent item={item} />
               ) : item.type === 'audio' ? (
                 // Use Html5Video for audio - https://discord.com/channels/809501355504959528/817306238811111454/1106375592380743761
-                <Html5Video src={item.src} />
+                <Html5Video src={item.src} volume={item.volume} />
               ) : item.type === 'text' ? (
                 <TextOverlayComponent item={item} />
               ) : null}
@@ -98,28 +98,26 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
           </Sequence>
         ))}
       </AbsoluteFill>
-      {/* Selection outlines with overflow visible */}
-      {setSelectedItem &&
-        updateResizableItemProperties &&
-        sortedResizableItems.map((item) => {
-          return (
-            <Sequence
-              key={`outline-${item.id}`}
-              from={item.start}
-              durationInFrames={item.duration}
-              layout="none"
-            >
-              <SelectionOutline
-                updateItem={updateResizableItemProperties}
-                item={item}
-                setSelectedItem={setSelectedItem}
-                selectedItem={selectedItem ?? null}
-                isDragging={isDragging}
-                onSelect={onSelectItem}
-              />
-            </Sequence>
-          );
-        })}
+
+      {sortedResizableItems.map((item) => {
+        return (
+          <Sequence
+            key={item.id}
+            from={item.start}
+            durationInFrames={item.duration}
+            layout="none"
+          >
+            <SelectionOutline
+              updateItem={updateResizableItemProperties}
+              item={item}
+              setSelectedItem={setSelectedItem}
+              selectedItem={selectedItem}
+              isDragging={isDragging}
+              onSelect={onSelectItem}
+            />
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 };

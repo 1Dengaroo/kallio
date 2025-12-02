@@ -14,11 +14,17 @@ type ResizeHandleType =
 export const ResizeHandle: React.FC<{
   type: ResizeHandleType;
   item: ResizableItem;
-  updateItem: (id: string, updates: Partial<ResizableItem>) => void;
+  updateItem: (item: ResizableItem, updates: Partial<ResizableItem>) => void;
 }> = ({ type, item, updateItem }) => {
   const scale = useCurrentScale();
   const size = Math.round(HANDLE_SIZE / scale);
   const borderSize = 1 / scale;
+
+  const resizeDataRef = React.useRef<
+    Partial<ResizableItem> & { fontSize?: number }
+  >({});
+  const isResizingRef = React.useRef(false);
+  const animationFrameRef = React.useRef<number | null>(null);
 
   const sizeStyle: React.CSSProperties = useMemo(() => {
     return {
@@ -85,8 +91,11 @@ export const ResizeHandle: React.FC<{
 
       const initialX = e.clientX;
       const initialY = e.clientY;
+      isResizingRef.current = true;
 
       const onPointerMove = (pointerMoveEvent: PointerEvent) => {
+        if (!isResizingRef.current) return;
+
         const offsetX = (pointerMoveEvent.clientX - initialX) / scale;
         const offsetY = (pointerMoveEvent.clientY - initialY) / scale;
 
@@ -114,11 +123,27 @@ export const ResizeHandle: React.FC<{
           updates.fontSize = item.fontSize * widthScale;
         }
 
-        updateItem(item.id, updates);
+        resizeDataRef.current = updates;
+
+        if (animationFrameRef.current === null) {
+          animationFrameRef.current = requestAnimationFrame(() => {
+            if (isResizingRef.current) {
+              updateItem(item, resizeDataRef.current);
+            }
+            animationFrameRef.current = null;
+          });
+        }
       };
 
       const onPointerUp = () => {
+        isResizingRef.current = false;
         window.removeEventListener('pointermove', onPointerMove);
+
+        if (animationFrameRef.current !== null) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
+        }
+        updateItem(item, resizeDataRef.current);
       };
 
       window.addEventListener('pointermove', onPointerMove, { passive: true });

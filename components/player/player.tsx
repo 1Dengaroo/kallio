@@ -7,49 +7,18 @@ import { VideoComposition } from './video-composition';
 import { useVideoEditor } from '../../context/video-editor-context';
 import { DEFAULT_FRAMERATE } from '@/constants';
 import { useKeyboardEvent } from '@/hooks/use-keyboard-event';
-import { useSidePanel } from '@/context/side-panel-context';
-import type { ResizableTimelineItem } from '@/types';
+import { useStableInputProps } from '@/hooks/use-stable-input-props';
 import { usePlayerDimensions } from '@/context/player-dimensions-context';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
-  const { clips, textOverlays, audioTracks, totalDuration, setPlayerRef } =
-    useVideoEditor();
-  const { setPropertiesView } = useSidePanel();
+  const { totalDuration, setPlayerRef } = useVideoEditor();
   const { playerWidth, playerHeight, compositionWidth, compositionHeight } =
     usePlayerDimensions();
 
-  const { selectedItem, setSelectedItem, updateResizableItemProperties } =
-    useVideoEditor();
-
-  const onSelectItem = useCallback(
-    (item: ResizableTimelineItem) => {
-      setPropertiesView();
-    },
-    [setPropertiesView]
-  );
-
   const component = useMemo(() => VideoComposition, []);
-  const inputProps = useMemo(
-    () => ({
-      clips,
-      textOverlays,
-      audioTracks,
-      selectedItem,
-      setSelectedItem,
-      updateResizableItemProperties,
-      onSelectItem
-    }),
-    [
-      clips,
-      textOverlays,
-      audioTracks,
-      selectedItem,
-      setSelectedItem,
-      updateResizableItemProperties,
-      onSelectItem
-    ]
-  );
+
+  const inputProps = useStableInputProps();
 
   const onPlayerToggle = useCallback(() => {
     if (playerRef.current) {
@@ -80,13 +49,12 @@ export const VideoPlayer: React.FC = () => {
       <div
         className={cn(
           'shadow-lg rounded-lg overflow-visible',
-          'bg-muted/50 border'
+          'bg-muted/50 border',
+          'relative shrink-0'
         )}
         style={{
           width: `${playerWidth}px`,
-          height: `${playerHeight}px`,
-          position: 'relative',
-          flexShrink: 0 // Prevent flex container from shrinking this element
+          height: `${playerHeight}px`
         }}
       >
         <Player
@@ -100,11 +68,6 @@ export const VideoPlayer: React.FC = () => {
             width: '100%',
             height: '100%'
           }}
-          renderLoading={() => (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-muted-foreground">Loading...</p>
-            </div>
-          )}
           inputProps={inputProps}
           logLevel="trace"
           overflowVisible

@@ -74,18 +74,18 @@ const sidebarData = {
   ],
   projects: [
     {
-      name: 'Design Engineering',
-      url: '/projects/1',
+      name: 'Demo',
+      url: '/projects/demo',
       icon: Frame
     },
     {
-      name: 'Sales & Marketing',
-      url: '/projects/2',
+      name: 'Demo 2',
+      url: '/projects/demo-2',
       icon: PieChart
     },
     {
-      name: 'Travel',
-      url: '/projects/3',
+      name: 'Demo 3',
+      url: '/projects/demo-3',
       icon: Map
     }
   ],

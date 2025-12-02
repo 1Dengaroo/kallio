@@ -7,7 +7,7 @@ import { ResizeHandle } from './resize-handle';
 
 export const SelectionOutline: React.FC<{
   item: ResizableItem;
-  updateItem: (id: string, updates: Partial<ResizableItem>) => void;
+  updateItem: (item: ResizableItem, updates: Partial<ResizableItem>) => void;
   setSelectedItem: (item: TimelineItemType | null) => void;
   selectedItem: TimelineItemType | null;
   isDragging: boolean;
@@ -60,7 +60,7 @@ export const SelectionOutline: React.FC<{
       const onPointerMove = (pointerMoveEvent: PointerEvent) => {
         const offsetX = (pointerMoveEvent.clientX - initialX) / scale;
         const offsetY = (pointerMoveEvent.clientY - initialY) / scale;
-        updateItem(item.id, {
+        updateItem(item, {
           x: Math.round(item.x + offsetX),
           y: Math.round(item.y + offsetY)
         });
