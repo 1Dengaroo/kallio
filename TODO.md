@@ -1,9 +1,17 @@
 # Todo
 
-- Allow user to move text overlays to different positions
-- Add cut and delete functionality for all timeline elements
-- Add multiple rows to timeline (one for audio, text, videos, images)
-- Add ruler to timeline
-- Add pointer events to timeline (click to move marker, ...)
-- Allow for resizing timeline items (hard)
-- Add keyboard actions (k for play, backspace for delete)
+### Video Editor
+
+- Add keyboard actions for delete, split, and duplicate timeline items
+- Add property config for audio files for speed and volume
+- Add property config for video files for speed and volume
+- Remove debug section in properties when done
+
+### AI Editing
+
+- Add Chat interface on the right as a panel
+- Connect to OpenAI, TwelveLabs
+
+### If AI works
+
+- Connect to cloud provider (AWS, Supabase, Firebase, Cloudflare, etc.)
