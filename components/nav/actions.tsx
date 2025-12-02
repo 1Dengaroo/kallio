@@ -54,8 +54,6 @@ export function Actions() {
     setClipsView();
   };
 
-  const handleAddImage = () => {};
-
   const handleAddAudio = () => {
     addAudio();
   };
@@ -76,12 +74,6 @@ export function Actions() {
       onClick: handleAddClip,
       icon: Video,
       tooltip: 'View uploaded clips'
-    },
-    {
-      name: 'Add Image',
-      onClick: handleAddImage,
-      icon: Image,
-      tooltip: 'Add an image to the timeline'
     },
     {
       name: 'Add Audio',

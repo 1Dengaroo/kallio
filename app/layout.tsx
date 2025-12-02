@@ -5,12 +5,6 @@ import { ThemeProvider } from 'next-themes';
 import { Analytics } from '@vercel/analytics/next';
 import { ClerkProvider } from '@clerk/nextjs';
 
-import { Sidebar } from '@/components/nav/sidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { VideoEditorProvider } from '@/context/video-editor-context';
-import { SidePanelProvider } from '@/context/side-panel-context';
-import { PlayerDimensionsProvider } from '@/context/player-dimensions-context';
-
 const inter = Inter({ subsets: ['latin'] });
 const baseUrl = 'https://kallio.ai';
 
@@ -40,23 +34,14 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className} antialiased`}>
-          <VideoEditorProvider>
-            <PlayerDimensionsProvider>
-              <SidePanelProvider>
-                <SidebarProvider defaultOpen={false}>
-                  <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                  >
-                    <Sidebar />
-                    <main className="relative w-screen h-screen">{children}</main>
-                  </ThemeProvider>
-                </SidebarProvider>
-              </SidePanelProvider>
-            </PlayerDimensionsProvider>
-          </VideoEditorProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main className="relative w-screen h-screen">{children}</main>
+          </ThemeProvider>
           <Analytics />
         </body>
       </html>

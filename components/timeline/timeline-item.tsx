@@ -29,10 +29,10 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, index }) => {
     item.type === 'clip'
       ? 'bg-blue-500'
       : item.type === 'text'
-      ? 'bg-purple-500'
-      : item.type === 'audio'
-      ? 'bg-orange-400'
-      : 'bg-green-500';
+        ? 'bg-purple-500'
+        : item.type === 'audio'
+          ? 'bg-orange-400'
+          : 'bg-green-500';
 
   const maxDurationPx = useMemo(() => {
     return timeToPixels(getMaxSourceDurationFrames(item), scale.zoom) - 4;
