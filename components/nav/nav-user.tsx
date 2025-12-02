@@ -33,6 +33,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { shadcn } from '@clerk/themes';
+import { ModeToggle } from '../theme/mode-toggle';
 
 export function NavUser() {
   const { isMobile } = useSidebar();

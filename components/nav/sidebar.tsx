@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { NavUser } from './nav-user';
+import { ModeToggle } from '../theme/mode-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +25,7 @@ function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <Actions />
       </SidebarContent>
       <SidebarFooter>
+        <ModeToggle />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />
