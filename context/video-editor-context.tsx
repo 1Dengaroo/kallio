@@ -47,10 +47,10 @@ interface VideoEditorContextType {
   duplicateItem: (itemId: string) => void;
   deleteItem: (itemId: string) => void;
   splitItem: (itemId: string, splitFrame: number) => void;
-  updateTextOverlayProperties: (
+  updateResizableItemProperties: (
     itemId: string,
     properties: Partial<
-      Omit<TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
+      Omit<Clip | TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
     >
   ) => void;
 }
@@ -142,7 +142,11 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       duration: 300,
       sourceDuration: 900,
       src: 'https://hgwavsootdmvmjdvfiwc.supabase.co/storage/v1/object/public/clips/reactvideoeditor-quality.mp4?t=2024-09-03T02%3A09%3A02.395Z',
-      row: 0
+      row: 0,
+      x: 0,
+      y: 0,
+      width: 1920,
+      height: 1080
     };
 
     const updatedClips = [...clips, newClip];
@@ -168,7 +172,11 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         duration: uploadedClip.sourceDuration,
         sourceDuration: uploadedClip.sourceDuration,
         src: uploadedClip.src,
-        row: 0
+        row: 0,
+        x: 0,
+        y: 0,
+        width: 1920,
+        height: 1080
       };
 
       const updatedClips = [...clips, newClip];
@@ -480,6 +488,48 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     [textOverlays, selectedItem]
   );
 
+  const updateClipProperties = useCallback(
+    (
+      itemId: string,
+      properties: Partial<
+        Omit<Clip, 'id' | 'type' | 'start' | 'duration' | 'row'>
+      >
+    ) => {
+      const updatedClips = clips.map((clip) =>
+        clip.id === itemId ? { ...clip, ...properties } : clip
+      );
+      setClips(updatedClips);
+
+      // Update selectedItem if it's the item being updated
+      if (selectedItem?.id === itemId) {
+        setSelectedItem({ ...selectedItem, ...properties });
+      }
+    },
+    [clips, selectedItem]
+  );
+
+  const updateResizableItemProperties = useCallback(
+    (
+      itemId: string,
+      properties: Partial<
+        Omit<Clip | TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
+      >
+    ) => {
+      // Check if it's a clip or text overlay
+      const isClip = clips.some((clip) => clip.id === itemId);
+      const isTextOverlay = textOverlays.some(
+        (overlay) => overlay.id === itemId
+      );
+
+      if (isClip) {
+        updateClipProperties(itemId, properties);
+      } else if (isTextOverlay) {
+        updateTextOverlayProperties(itemId, properties);
+      }
+    },
+    [clips, textOverlays, updateClipProperties, updateTextOverlayProperties]
+  );
+
   const addAvailableClip = useCallback((clip: UploadedClip) => {
     setAvailableClips((prev) => [...prev, clip]);
   }, []);
@@ -507,7 +557,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     duplicateItem,
     deleteItem,
     splitItem,
-    updateTextOverlayProperties
+    updateResizableItemProperties
   };
 
   return (

@@ -8,7 +8,7 @@ import { useVideoEditor } from '../../context/video-editor-context';
 import { DEFAULT_FRAMERATE } from '@/constants';
 import { useKeyboardEvent } from '@/hooks/use-keyboard-event';
 import { useSidePanel } from '@/context/side-panel-context';
-import type { TextOverlay } from '@/types';
+import type { ResizableTimelineItem } from '@/types';
 import { usePlayerDimensions } from '@/context/player-dimensions-context';
 
 export const VideoPlayer: React.FC = () => {
@@ -19,11 +19,11 @@ export const VideoPlayer: React.FC = () => {
   const { playerWidth, playerHeight, compositionWidth, compositionHeight } =
     usePlayerDimensions();
 
-  const { selectedItem, setSelectedItem, updateTextOverlayProperties } =
+  const { selectedItem, setSelectedItem, updateResizableItemProperties } =
     useVideoEditor();
 
   const onSelectItem = useCallback(
-    (item: TextOverlay) => {
+    (item: ResizableTimelineItem) => {
       setPropertiesView();
     },
     [setPropertiesView]
@@ -37,7 +37,7 @@ export const VideoPlayer: React.FC = () => {
       audioTracks,
       selectedItem,
       setSelectedItem,
-      updateTextOverlayProperties,
+      updateResizableItemProperties,
       onSelectItem
     }),
     [
@@ -46,7 +46,7 @@ export const VideoPlayer: React.FC = () => {
       audioTracks,
       selectedItem,
       setSelectedItem,
-      updateTextOverlayProperties,
+      updateResizableItemProperties,
       onSelectItem
     ]
   );

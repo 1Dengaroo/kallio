@@ -13,7 +13,7 @@ export interface ResizableTimelineItem extends BaseTimelineItem {
   y: number;
 }
 
-export interface Clip extends BaseTimelineItem {
+export interface Clip extends ResizableTimelineItem {
   type: 'clip';
   name: string;
   /* In frames (FRAMERATE * SECONDS) */
@@ -50,6 +50,9 @@ export interface Audio extends BaseTimelineItem {
 
 // Union type for all timeline items
 export type TimelineItemType = Clip | TextOverlay | Audio;
+
+// Union type for resizable items (items that can be positioned and resized on canvas)
+export type ResizableItem = Clip | TextOverlay;
 
 export interface Scale {
   zoom: number;

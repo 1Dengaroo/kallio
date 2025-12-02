@@ -2,8 +2,15 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { Sequence, Html5Video, AbsoluteFill } from 'remotion';
-import type { Clip, TextOverlay, Audio, TimelineItemType } from '@/types';
+import type {
+  Clip,
+  TextOverlay,
+  Audio,
+  TimelineItemType,
+  ResizableItem
+} from '@/types';
 import { TextOverlayComponent } from '../video-components/text-overlay';
+import { ClipComponent } from '../video-components/clip-component';
 import { SelectionOutline } from '../video-components/selection-outline';
 
 interface VideoCompositionProps {
@@ -12,25 +19,21 @@ interface VideoCompositionProps {
   audioTracks: Audio[];
   selectedItem?: TimelineItemType | null;
   setSelectedItem?: (item: TimelineItemType | null) => void;
-  updateTextOverlayProperties?: (
+  updateResizableItemProperties?: (
     id: string,
-    updates: Partial<TextOverlay>
+    updates: Partial<Clip | TextOverlay>
   ) => void;
-  onSelectItem?: (item: TextOverlay) => void;
+  onSelectItem?: (item: ResizableItem) => void;
 }
 
-const displaySelectedItemOnTop = (
-  items: TextOverlay[],
+const displaySelectedItemOnTop = <T extends ResizableItem>(
+  items: T[],
   selectedItem: TimelineItemType | null
-): TextOverlay[] => {
+): T[] => {
   const selectedItems = items.filter((item) => item.id === selectedItem?.id);
   const unselectedItems = items.filter((item) => item.id !== selectedItem?.id);
 
   return [...unselectedItems, ...selectedItems];
-};
-
-const layerContainer: React.CSSProperties = {
-  overflow: 'hidden'
 };
 
 export const VideoComposition: React.FC<VideoCompositionProps> = ({
@@ -39,7 +42,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
   audioTracks,
   selectedItem,
   setSelectedItem,
-  updateTextOverlayProperties,
+  updateResizableItemProperties,
   onSelectItem
 }) => {
   const onPointerDown = useCallback(
@@ -55,9 +58,14 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
     [setSelectedItem]
   );
 
-  const sortedTextOverlays = useMemo(
-    () => displaySelectedItemOnTop(textOverlays, selectedItem ?? null),
-    [textOverlays, selectedItem]
+  const resizableItems: ResizableItem[] = useMemo(
+    () => [...clips, ...textOverlays],
+    [clips, textOverlays]
+  );
+
+  const sortedResizableItems = useMemo(
+    () => displaySelectedItemOnTop(resizableItems, selectedItem ?? null),
+    [resizableItems, selectedItem]
   );
 
   const isDragging = useMemo(() => false, []);
@@ -65,7 +73,11 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
   return (
     <AbsoluteFill onPointerDown={onPointerDown}>
       {/* Layers with overflow hidden */}
-      <AbsoluteFill style={layerContainer}>
+      <AbsoluteFill
+        style={{
+          overflow: 'hidden'
+        }}
+      >
         {[...clips, ...textOverlays, ...audioTracks].map((item) => (
           <Sequence
             key={item.id}
@@ -75,7 +87,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
           >
             <AbsoluteFill>
               {item.type === 'clip' ? (
-                <Html5Video src={item.src} />
+                <ClipComponent item={item} />
               ) : item.type === 'audio' ? (
                 // Use Html5Video for audio - https://discord.com/channels/809501355504959528/817306238811111454/1106375592380743761
                 <Html5Video src={item.src} />
@@ -88,8 +100,8 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
       </AbsoluteFill>
       {/* Selection outlines with overflow visible */}
       {setSelectedItem &&
-        updateTextOverlayProperties &&
-        sortedTextOverlays.map((item) => {
+        updateResizableItemProperties &&
+        sortedResizableItems.map((item) => {
           return (
             <Sequence
               key={`outline-${item.id}`}
@@ -98,7 +110,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
               layout="none"
             >
               <SelectionOutline
-                updateItem={updateTextOverlayProperties}
+                updateItem={updateResizableItemProperties}
                 item={item}
                 setSelectedItem={setSelectedItem}
                 selectedItem={selectedItem ?? null}
