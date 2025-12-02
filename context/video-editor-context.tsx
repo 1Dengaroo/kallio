@@ -47,6 +47,18 @@ interface VideoEditorContextType {
   duplicateItem: (itemId: string) => void;
   deleteItem: (itemId: string) => void;
   splitItem: (itemId: string, splitFrame: number) => void;
+  updateTextOverlayProperties: (
+    itemId: string,
+    properties: Partial<
+      Omit<TextOverlay, 'id' | 'type' | 'start' | 'duration' | 'row'>
+    >
+  ) => void;
+  updateClipProperties: (
+    itemId: string,
+    properties: Partial<
+      Omit<Clip, 'id' | 'type' | 'start' | 'duration' | 'row'>
+    >
+  ) => void;
   updateResizableItemProperties: (
     itemId: string,
     properties: Partial<
@@ -557,6 +569,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     duplicateItem,
     deleteItem,
     splitItem,
+    updateTextOverlayProperties,
+    updateClipProperties,
     updateResizableItemProperties
   };
 
