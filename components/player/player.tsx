@@ -7,25 +7,48 @@ import { VideoComposition } from './video-composition';
 import { useVideoEditor } from '../../context/video-editor-context';
 import { DEFAULT_FRAMERATE } from '@/constants';
 import { useKeyboardEvent } from '@/hooks/use-keyboard-event';
-import {
-  COMPOSITION_WIDTH,
-  COMPOSITION_HEIGHT,
-  PLAYER_WIDTH,
-  PLAYER_HEIGHT
-} from '@/constants';
-import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
-import { Overlays } from './video-overlays';
+import { useSidePanel } from '@/context/side-panel-context';
+import type { TextOverlay } from '@/types';
+import { usePlayerDimensions } from '@/context/player-dimensions-context';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
   const { clips, textOverlays, audioTracks, totalDuration, setPlayerRef } =
     useVideoEditor();
-  const currentFrame = useCurrentPlayerFrame(playerRef);
+  const { setPropertiesView } = useSidePanel();
+  const { playerWidth, playerHeight, compositionWidth, compositionHeight } =
+    usePlayerDimensions();
+
+  const { selectedItem, setSelectedItem, updateTextOverlayProperties } =
+    useVideoEditor();
+
+  const onSelectItem = useCallback(
+    (item: TextOverlay) => {
+      setPropertiesView();
+    },
+    [setPropertiesView]
+  );
 
   const component = useMemo(() => VideoComposition, []);
   const inputProps = useMemo(
-    () => ({ clips, textOverlays, audioTracks }),
-    [clips, textOverlays, audioTracks]
+    () => ({
+      clips,
+      textOverlays,
+      audioTracks,
+      selectedItem,
+      setSelectedItem,
+      updateTextOverlayProperties,
+      onSelectItem
+    }),
+    [
+      clips,
+      textOverlays,
+      audioTracks,
+      selectedItem,
+      setSelectedItem,
+      updateTextOverlayProperties,
+      onSelectItem
+    ]
   );
 
   const onPlayerToggle = useCallback(() => {
@@ -60,8 +83,8 @@ export const VideoPlayer: React.FC = () => {
           'bg-muted/50 border'
         )}
         style={{
-          width: `${PLAYER_WIDTH}px`,
-          height: `${PLAYER_HEIGHT}px`,
+          width: `${playerWidth}px`,
+          height: `${playerHeight}px`,
           position: 'relative',
           flexShrink: 0 // Prevent flex container from shrinking this element
         }}
@@ -70,8 +93,8 @@ export const VideoPlayer: React.FC = () => {
           ref={playerRef}
           component={component}
           durationInFrames={Math.max(1, totalDuration)}
-          compositionWidth={COMPOSITION_WIDTH}
-          compositionHeight={COMPOSITION_HEIGHT}
+          compositionWidth={compositionWidth}
+          compositionHeight={compositionHeight}
           fps={DEFAULT_FRAMERATE}
           style={{
             width: '100%',
@@ -84,9 +107,8 @@ export const VideoPlayer: React.FC = () => {
           )}
           inputProps={inputProps}
           logLevel="trace"
+          overflowVisible
         />
-        {/* Overlays - Used for resizing and moving text and images */}
-        <Overlays textOverlays={textOverlays} currentFrame={currentFrame} />
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ import {
   Trash2,
   Play,
   Pause,
-  Maximize
+  Maximize,
+  MonitorPlay,
+  Smartphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useVideoEditor } from '@/context/video-editor-context';
@@ -19,6 +21,7 @@ import {
 } from '@/utils/timeline';
 import { ACTIONS_BAR_HEIGHT, TIMELINE_OFFSET_X } from '@/constants';
 import { useCurrentPlayerFrame } from '@/hooks/use-current-frame';
+import { usePlayerDimensions } from '@/context/player-dimensions-context';
 
 export const TimelineActions = () => {
   const {
@@ -33,6 +36,7 @@ export const TimelineActions = () => {
   } = useVideoEditor();
   const currentFrame = useCurrentPlayerFrame(playerRef);
   const [isPlaying, setPlaying] = useState(false);
+  const { isMobile, onViewportChange } = usePlayerDimensions();
 
   const handleZoomIn = () => {
     // Increase zoom by 20%
@@ -175,6 +179,19 @@ export const TimelineActions = () => {
 
       {/* Right side - scale controls */}
       <div className="flex items-center gap-4">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={() => onViewportChange(!isMobile)}
+          tooltip="Toggle mobile/desktop view"
+        >
+          {isMobile ? (
+            <MonitorPlay className="h-3.5 w-3.5" />
+          ) : (
+            <Smartphone className="h-3.5 w-3.5" />
+          )}
+        </Button>
         <div className="flex items-center gap-1">
           <Button
             variant="outline"

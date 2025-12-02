@@ -23,19 +23,17 @@ export const MAX_SOURCE_DURATION_FRAMES = 1800 * DEFAULT_FRAMERATE;
 // Actions bar height in pixels
 export const ACTIONS_BAR_HEIGHT = 44;
 
-export const COMPOSITION_WIDTH = 1920;
-export const COMPOSITION_HEIGHT = 1080;
+// Desktop composition and player dimensions (16:9 landscape)
+export const DESKTOP_COMPOSITION_WIDTH = 1920;
+export const DESKTOP_COMPOSITION_HEIGHT = 1080;
+export const DESKTOP_PLAYER_WIDTH = 700;
+export const DESKTOP_PLAYER_HEIGHT = 400;
 
-// Desktop player dimensions
-// export const PLAYER_WIDTH = 700;
-// export const PLAYER_HEIGHT = 400;
-
-// Mobile player dimensions
-export const PLAYER_WIDTH = 300;
-export const PLAYER_HEIGHT = 500;
-
-export const SCALE_X = PLAYER_WIDTH / COMPOSITION_WIDTH;
-export const SCALE_Y = PLAYER_HEIGHT / COMPOSITION_HEIGHT;
+// Mobile composition and player dimensions (9:16 portrait)
+export const MOBILE_COMPOSITION_WIDTH = 1080;
+export const MOBILE_COMPOSITION_HEIGHT = 1920;
+export const MOBILE_PLAYER_WIDTH = 300;
+export const MOBILE_PLAYER_HEIGHT = 500;
 
 // Default text overlay font size
 export const DEFAULT_TEXT_FONT_SIZE = 32;
