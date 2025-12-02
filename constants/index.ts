@@ -25,8 +25,14 @@ export const ACTIONS_BAR_HEIGHT = 44;
 
 export const COMPOSITION_WIDTH = 1920;
 export const COMPOSITION_HEIGHT = 1080;
-export const PLAYER_WIDTH = 700;
-export const PLAYER_HEIGHT = 400;
+
+// Desktop player dimensions
+// export const PLAYER_WIDTH = 700;
+// export const PLAYER_HEIGHT = 400;
+
+// Mobile player dimensions
+export const PLAYER_WIDTH = 300;
+export const PLAYER_HEIGHT = 500;
 
 export const SCALE_X = PLAYER_WIDTH / COMPOSITION_WIDTH;
 export const SCALE_Y = PLAYER_HEIGHT / COMPOSITION_HEIGHT;

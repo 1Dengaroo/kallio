@@ -1,7 +1,7 @@
 'use client';
 
 import { TextOverlayProperties } from './text-overlay-properties';
-import { isClip, isTextOverlay } from '@/types/guards';
+import { isClip, isTextOverlay, isAudio } from '@/types/guards';
 import { TimelineItemType } from '@/types';
 import { CardFooter } from '../ui/card';
 
@@ -14,13 +14,14 @@ export const PropertiesPanelContent: React.FC<PropertiesPanelContentProps> = ({
 }) => {
   const isText = isTextOverlay(selectedItem);
   const isVideo = isClip(selectedItem);
+  const isAudioItem = isAudio(selectedItem);
 
   return (
     <div className="flex flex-col h-full">
       {/* Type-specific properties */}
       {isText && <TextOverlayProperties item={selectedItem} />}
 
-      {isVideo && (
+      {(isVideo || isAudioItem) && (
         <div className="p-4">
           <p className="text-xs text-muted-foreground">
             No additional properties available
@@ -52,6 +53,20 @@ export const PropertiesPanelContent: React.FC<PropertiesPanelContentProps> = ({
               <span className="text-muted-foreground">Source:</span>{' '}
               <span className="font-medium">{selectedItem.sourceDuration}</span>
             </div>
+          )}
+          {isAudioItem && (
+            <>
+              <div>
+                <span className="text-muted-foreground">Source:</span>{' '}
+                <span className="font-medium">
+                  {selectedItem.sourceDuration}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Volume:</span>{' '}
+                <span className="font-medium">{selectedItem.volume}</span>
+              </div>
+            </>
           )}
         </div>
       </CardFooter>

@@ -5,7 +5,7 @@ import { useVideoEditor } from '@/context/video-editor-context';
 import { useSidePanel } from '@/context/side-panel-context';
 import { ClipsListContent } from './clips-list';
 import { PropertiesPanelContent } from './properties-panel';
-import { isTextOverlay } from '@/types/guards';
+import { isTextOverlay, isAudio } from '@/types/guards';
 
 export const SidePanel = () => {
   const { selectedItem } = useVideoEditor();
@@ -21,8 +21,9 @@ export const SidePanel = () => {
 
     if (viewMode === 'properties' && selectedItem) {
       const isText = isTextOverlay(selectedItem);
+      const isAudioItem = isAudio(selectedItem);
       return {
-        title: `${isText ? 'Text Overlay' : 'Clip'} Properties`,
+        title: `${isText ? 'Text Overlay' : isAudioItem ? 'Audio' : 'Clip'} Properties`,
         description: null
       };
     }

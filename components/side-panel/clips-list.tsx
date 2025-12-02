@@ -13,7 +13,7 @@ export const ClipsListContent = () => {
     addClipFromAvailable(clip);
   };
 
-  if (availableClips.length !== 0) {
+  if (availableClips.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4 text-center">
         <p className="text-sm text-muted-foreground">No clips uploaded</p>

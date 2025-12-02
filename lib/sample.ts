@@ -8,9 +8,9 @@ export const DEFAULT_CLIPS: UploadedClip[] = [
     sourceDuration: 900
   },
   {
-    id: 'uploaded-2',
-    name: 'Sample Video 2.mp4',
-    src: 'https://hgwavsootdmvmjdvfiwc.supabase.co/storage/v1/object/public/clips/reactvideoeditor-quality.mp4?t=2024-09-03T02%3A09%3A02.395Z',
+    id: 'BigBuckBunny',
+    name: 'BigBuckBunny',
+    src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     sourceDuration: 900
   },
   {

@@ -4,7 +4,7 @@ import {
   MAX_SOURCE_DURATION_FRAMES,
   DEFAULT_FRAMERATE
 } from '@/constants';
-import { isClip, isTextOverlay } from '@/types/guards';
+import { isAudio, isClip, isTextOverlay } from '@/types/guards';
 import { TimelineItemType } from '@/types';
 
 export const unitsToTimeMs = (units: number, zoom = 1): number => {
@@ -60,6 +60,8 @@ export const timeToPixels = (
 
 export const getMaxSourceDurationFrames = (item: TimelineItemType): number => {
   if (isClip(item)) {
+    return item.sourceDuration;
+  } else if (isAudio(item)) {
     return item.sourceDuration;
   } else if (isTextOverlay(item)) {
     return MAX_SOURCE_DURATION_FRAMES;

@@ -105,12 +105,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
                     </div>
                   ))}
                   {allTimelineItems.map((item, index) => (
-                    <TimelineItem
-                      key={item.id}
-                      item={item}
-                      type={'src' in item ? 'clip' : 'text'}
-                      index={index}
-                    />
+                    <TimelineItem key={item.id} item={item} index={index} />
                   ))}
                 </div>
               </div>

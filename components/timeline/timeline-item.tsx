@@ -14,11 +14,10 @@ import { useSidePanel } from '@/context/side-panel-context';
 
 interface TimelineItemProps {
   item: TimelineItemType;
-  type: 'clip' | 'text';
   index: number;
 }
 
-export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
+export const TimelineItem: FC<TimelineItemProps> = ({ item, index }) => {
   const dragState = useDragState();
   const { scale, allTimelineItems, selectedItem, setSelectedItem, playerRef } =
     useVideoEditor();
@@ -27,10 +26,12 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
   const isSelected = selectedItem?.id === item.id;
 
   const bgColor =
-    type === 'clip'
-      ? 'bg-primary'
-      : type === 'text'
+    item.type === 'clip'
+      ? 'bg-blue-500'
+      : item.type === 'text'
       ? 'bg-purple-500'
+      : item.type === 'audio'
+      ? 'bg-orange-400'
       : 'bg-green-500';
 
   const maxDurationPx = useMemo(() => {
@@ -150,7 +151,7 @@ export const TimelineItem: FC<TimelineItemProps> = ({ item, type, index }) => {
         onClick={handleClick}
       >
         <div className="absolute inset-0 flex items-center justify-center text-xs text-primary-foreground font-semibold pointer-events-none">
-          {type.charAt(0).toUpperCase() + type.slice(1)} {index + 1}
+          {item.type.charAt(0).toUpperCase() + item.type.slice(1)} {index + 1}
         </div>
         <ResizeHandle
           id={`${item.id}-resize-left`}

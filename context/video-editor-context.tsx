@@ -11,6 +11,7 @@ import React, {
 import type {
   Clip,
   TextOverlay,
+  Audio,
   Scale,
   TimelineItemType,
   UploadedClip
@@ -22,6 +23,7 @@ import { DEFAULT_CLIPS } from '@/lib/sample';
 interface VideoEditorContextType {
   clips: Clip[];
   textOverlays: TextOverlay[];
+  audioTracks: Audio[];
   allTimelineItems: Array<TimelineItemType>;
   totalDuration: number;
   playerRef: React.RefObject<PlayerRef> | null;
@@ -31,6 +33,7 @@ interface VideoEditorContextType {
   addClip: () => void;
   addClipFromAvailable: (uploadedClip: UploadedClip) => void;
   addTextOverlay: () => void;
+  addAudio: () => void;
   setPlayerRef: (playerRef: React.RefObject<PlayerRef> | null) => void;
   updateItemStartAndDuration: (
     itemId: string,
@@ -73,6 +76,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 }) => {
   const [clips, setClips] = useState<Clip[]>([]);
   const [textOverlays, setTextOverlays] = useState<TextOverlay[]>([]);
+  const [audioTracks, setAudioTracks] = useState<Audio[]>([]);
   const [totalDuration, setTotalDuration] = useState(1);
   const [scale, setScale] = useState<Scale>(DEFAULT_SCALE);
   const [playerRef, setPlayerRef] = useState<React.RefObject<PlayerRef> | null>(
@@ -85,12 +89,19 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     useState<UploadedClip[]>(DEFAULT_CLIPS);
 
   const allTimelineItems = useMemo(
-    () => [...clips, ...textOverlays].sort((a, b) => a.start - b.start),
-    [clips, textOverlays]
+    () =>
+      [...clips, ...textOverlays, ...audioTracks].sort(
+        (a, b) => a.start - b.start
+      ),
+    [clips, textOverlays, audioTracks]
   );
 
   const updateTotalDuration = useCallback(
-    (updatedClips: Clip[], updatedTextOverlays: TextOverlay[]) => {
+    (
+      updatedClips: Clip[],
+      updatedTextOverlays: TextOverlay[],
+      updatedAudioTracks: Audio[]
+    ) => {
       const lastClipEnd = updatedClips.reduce(
         (max, clip) => Math.max(max, clip.start + clip.duration),
         0
@@ -99,15 +110,23 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         (max, overlay) => Math.max(max, overlay.start + overlay.duration),
         0
       );
+      const lastAudioEnd = updatedAudioTracks.reduce(
+        (max, audio) => Math.max(max, audio.start + audio.duration),
+        0
+      );
 
-      const newTotalDuration = Math.max(lastClipEnd, lastTextOverlayEnd);
+      const newTotalDuration = Math.max(
+        lastClipEnd,
+        lastTextOverlayEnd,
+        lastAudioEnd
+      );
       setTotalDuration(newTotalDuration);
     },
     []
   );
 
   const addClip = useCallback(() => {
-    const lastItem = [...clips, ...textOverlays].reduce(
+    const lastItem = [...clips, ...textOverlays, ...audioTracks].reduce(
       (latest, item) =>
         item.start + item.duration > latest.start + latest.duration
           ? item
@@ -128,12 +147,12 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
     const updatedClips = [...clips, newClip];
     setClips(updatedClips);
-    updateTotalDuration(updatedClips, textOverlays);
-  }, [clips, textOverlays, updateTotalDuration]);
+    updateTotalDuration(updatedClips, textOverlays, audioTracks);
+  }, [clips, textOverlays, audioTracks, updateTotalDuration]);
 
   const addClipFromAvailable = useCallback(
     (uploadedClip: UploadedClip) => {
-      const lastItem = [...clips, ...textOverlays].reduce(
+      const lastItem = [...clips, ...textOverlays, ...audioTracks].reduce(
         (latest, item) =>
           item.start + item.duration > latest.start + latest.duration
             ? item
@@ -154,13 +173,13 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
       const updatedClips = [...clips, newClip];
       setClips(updatedClips);
-      updateTotalDuration(updatedClips, textOverlays);
+      updateTotalDuration(updatedClips, textOverlays, audioTracks);
     },
-    [clips, textOverlays, updateTotalDuration]
+    [clips, textOverlays, audioTracks, updateTotalDuration]
   );
 
   const addTextOverlay = useCallback(() => {
-    const lastItem = [...clips, ...textOverlays].reduce(
+    const lastItem = [...clips, ...textOverlays, ...audioTracks].reduce(
       (latest, item) =>
         item.start + item.duration > latest.start + latest.duration
           ? item
@@ -189,8 +208,34 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
 
     const updatedOverlays = [...textOverlays, newOverlay];
     setTextOverlays(updatedOverlays);
-    updateTotalDuration(clips, updatedOverlays);
-  }, [clips, textOverlays, updateTotalDuration]);
+    updateTotalDuration(clips, updatedOverlays, audioTracks);
+  }, [clips, textOverlays, audioTracks, updateTotalDuration]);
+
+  const addAudio = useCallback(() => {
+    const lastItem = [...clips, ...textOverlays, ...audioTracks].reduce(
+      (latest, item) =>
+        item.start + item.duration > latest.start + latest.duration
+          ? item
+          : latest,
+      { start: 0, duration: 0 }
+    );
+
+    const newAudio: Audio = {
+      id: `audio-${audioTracks.length + 1}`,
+      type: 'audio',
+      name: `Audio ${audioTracks.length + 1}`,
+      start: lastItem.start + lastItem.duration,
+      duration: 300,
+      sourceDuration: 300,
+      src: 'https://cdn.designcombo.dev/audio/Hope.mp3',
+      row: 0,
+      volume: 1
+    };
+
+    const updatedAudio = [...audioTracks, newAudio];
+    setAudioTracks(updatedAudio);
+    updateTotalDuration(clips, textOverlays, updatedAudio);
+  }, [clips, textOverlays, audioTracks, updateTotalDuration]);
 
   const updateItemStartAndDuration = useCallback(
     (itemId: string, newStart: number, newDuration: number) => {
@@ -198,7 +243,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       const clampedStart = Math.max(0, newStart);
       const clampedDuration = Math.max(1, newDuration);
 
-      // Update the item in clips or textOverlays
+      // Update the item in clips, textOverlays, or audioTracks
       const updatedClips = clips.map((clip) =>
         clip.id === itemId
           ? { ...clip, start: clampedStart, duration: clampedDuration }
@@ -209,10 +254,20 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
           ? { ...overlay, start: clampedStart, duration: clampedDuration }
           : overlay
       );
+      const updatedAudioTracks = audioTracks.map((audio) =>
+        audio.id === itemId
+          ? { ...audio, start: clampedStart, duration: clampedDuration }
+          : audio
+      );
 
       setClips(updatedClips);
       setTextOverlays(updatedTextOverlays);
-      updateTotalDuration(updatedClips, updatedTextOverlays);
+      setAudioTracks(updatedAudioTracks);
+      updateTotalDuration(
+        updatedClips,
+        updatedTextOverlays,
+        updatedAudioTracks
+      );
 
       // Update selectedItem if it's the item being updated
       if (selectedItem?.id === itemId) {
@@ -223,7 +278,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         });
       }
     },
-    [clips, textOverlays, updateTotalDuration, selectedItem]
+    [clips, textOverlays, audioTracks, updateTotalDuration, selectedItem]
   );
 
   const updateItemRow = useCallback(
@@ -232,7 +287,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       const clampedStart = Math.round(Math.max(0, newStart));
       const clampedRow = Math.round(Math.max(0, newRow));
 
-      // Update the item in clips or textOverlays
+      // Update the item in clips, textOverlays, or audioTracks
       const updatedClips = clips.map((clip) =>
         clip.id === itemId
           ? { ...clip, start: clampedStart, row: clampedRow }
@@ -243,12 +298,22 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
           ? { ...overlay, start: clampedStart, row: clampedRow }
           : overlay
       );
+      const updatedAudioTracks = audioTracks.map((audio) =>
+        audio.id === itemId
+          ? { ...audio, start: clampedStart, row: clampedRow }
+          : audio
+      );
 
       setClips(updatedClips);
       setTextOverlays(updatedTextOverlays);
-      updateTotalDuration(updatedClips, updatedTextOverlays);
+      setAudioTracks(updatedAudioTracks);
+      updateTotalDuration(
+        updatedClips,
+        updatedTextOverlays,
+        updatedAudioTracks
+      );
     },
-    [clips, textOverlays, updateTotalDuration]
+    [clips, textOverlays, audioTracks, updateTotalDuration]
   );
 
   const duplicateItem = useCallback(
@@ -264,8 +329,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         )
       );
 
-      if ('src' in item) {
-        // It's a clip
+      if (item.type === 'clip') {
         const newClip: Clip = {
           ...item,
           id: `clip-${Date.now()}`,
@@ -274,9 +338,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         };
         const updatedClips = [...clips, newClip];
         setClips(updatedClips);
-        updateTotalDuration(updatedClips, textOverlays);
-      } else {
-        // It's a text overlay
+        updateTotalDuration(updatedClips, textOverlays, audioTracks);
+      } else if (item.type === 'text') {
         const newOverlay: TextOverlay = {
           ...item,
           id: `text-${Date.now()}`,
@@ -285,10 +348,20 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         };
         const updatedOverlays = [...textOverlays, newOverlay];
         setTextOverlays(updatedOverlays);
-        updateTotalDuration(clips, updatedOverlays);
+        updateTotalDuration(clips, updatedOverlays, audioTracks);
+      } else if (item.type === 'audio') {
+        const newAudio: Audio = {
+          ...item,
+          id: `audio-${Date.now()}`,
+          start: endPosition,
+          row: 0
+        };
+        const updatedAudio = [...audioTracks, newAudio];
+        setAudioTracks(updatedAudio);
+        updateTotalDuration(clips, textOverlays, updatedAudio);
       }
     },
-    [clips, textOverlays, allTimelineItems, updateTotalDuration]
+    [clips, textOverlays, audioTracks, allTimelineItems, updateTotalDuration]
   );
 
   const deleteItem = useCallback(
@@ -297,13 +370,21 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       const updatedTextOverlays = textOverlays.filter(
         (overlay) => overlay.id !== itemId
       );
+      const updatedAudioTracks = audioTracks.filter(
+        (audio) => audio.id !== itemId
+      );
 
       setClips(updatedClips);
       setTextOverlays(updatedTextOverlays);
-      updateTotalDuration(updatedClips, updatedTextOverlays);
+      setAudioTracks(updatedAudioTracks);
+      updateTotalDuration(
+        updatedClips,
+        updatedTextOverlays,
+        updatedAudioTracks
+      );
       setSelectedItem(null);
     },
-    [clips, textOverlays, updateTotalDuration]
+    [clips, textOverlays, audioTracks, updateTotalDuration]
   );
 
   const splitItem = useCallback(
@@ -317,8 +398,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
       // Ensure split point is within the item bounds
       if (splitPoint <= 0 || splitPoint >= item.duration) return;
 
-      if ('src' in item) {
-        // It's a clip
+      if (item.type === 'clip') {
         const firstPart: Clip = {
           ...item,
           duration: Math.round(splitPoint)
@@ -336,9 +416,8 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         updatedClips.push(secondPart);
 
         setClips(updatedClips);
-        updateTotalDuration(updatedClips, textOverlays);
-      } else {
-        // It's a text overlay
+        updateTotalDuration(updatedClips, textOverlays, audioTracks);
+      } else if (item.type === 'text') {
         const firstPart: TextOverlay = {
           ...item,
           duration: Math.round(splitPoint)
@@ -356,10 +435,29 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
         updatedOverlays.push(secondPart);
 
         setTextOverlays(updatedOverlays);
-        updateTotalDuration(clips, updatedOverlays);
+        updateTotalDuration(clips, updatedOverlays, audioTracks);
+      } else if (item.type === 'audio') {
+        const firstPart: Audio = {
+          ...item,
+          duration: Math.round(splitPoint)
+        };
+        const secondPart: Audio = {
+          ...item,
+          id: `audio-${Date.now()}`,
+          start: Math.round(item.start + splitPoint),
+          duration: Math.round(item.duration - splitPoint)
+        };
+
+        const updatedAudio = audioTracks.map((audio) =>
+          audio.id === itemId ? firstPart : audio
+        );
+        updatedAudio.push(secondPart);
+
+        setAudioTracks(updatedAudio);
+        updateTotalDuration(clips, textOverlays, updatedAudio);
       }
     },
-    [clips, textOverlays, allTimelineItems, updateTotalDuration]
+    [clips, textOverlays, audioTracks, allTimelineItems, updateTotalDuration]
   );
 
   const updateTextOverlayProperties = useCallback(
@@ -389,6 +487,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const value: VideoEditorContextType = {
     clips,
     textOverlays,
+    audioTracks,
     allTimelineItems,
     totalDuration,
     playerRef,
@@ -398,6 +497,7 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
     selectedItem,
     availableClips,
     addTextOverlay,
+    addAudio,
     setPlayerRef,
     updateItemStartAndDuration,
     updateItemRow,

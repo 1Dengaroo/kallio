@@ -39,8 +39,17 @@ export interface TextOverlay extends ResizableTimelineItem {
   weight: number;
 }
 
+export interface Audio extends BaseTimelineItem {
+  type: 'audio';
+  name: string;
+  /* In frames (FRAMERATE * SECONDS) */
+  sourceDuration: number;
+  src: string;
+  volume: number;
+}
+
 // Union type for all timeline items
-export type TimelineItemType = Clip | TextOverlay;
+export type TimelineItemType = Clip | TextOverlay | Audio;
 
 export interface Scale {
   zoom: number;

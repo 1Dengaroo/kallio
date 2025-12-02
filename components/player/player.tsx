@@ -18,13 +18,14 @@ import { Overlays } from './video-overlays';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
-  const { clips, textOverlays, totalDuration, setPlayerRef } = useVideoEditor();
+  const { clips, textOverlays, audioTracks, totalDuration, setPlayerRef } =
+    useVideoEditor();
   const currentFrame = useCurrentPlayerFrame(playerRef);
 
   const component = useMemo(() => VideoComposition, []);
   const inputProps = useMemo(
-    () => ({ clips, textOverlays }),
-    [clips, textOverlays]
+    () => ({ clips, textOverlays, audioTracks }),
+    [clips, textOverlays, audioTracks]
   );
 
   const onPlayerToggle = useCallback(() => {
@@ -61,9 +62,8 @@ export const VideoPlayer: React.FC = () => {
         style={{
           width: `${PLAYER_WIDTH}px`,
           height: `${PLAYER_HEIGHT}px`,
-          maxWidth: '100%',
-          maxHeight: '100%',
-          position: 'relative'
+          position: 'relative',
+          flexShrink: 0 // Prevent flex container from shrinking this element
         }}
       >
         <Player
@@ -83,6 +83,7 @@ export const VideoPlayer: React.FC = () => {
             </div>
           )}
           inputProps={inputProps}
+          logLevel="trace"
         />
         {/* Overlays - Used for resizing and moving text and images */}
         <Overlays textOverlays={textOverlays} currentFrame={currentFrame} />

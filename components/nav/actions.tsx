@@ -19,7 +19,7 @@ export function Actions() {
   const pathname = usePathname();
   const isProjectPage = /^\/projects\/[^\/]+$/.test(pathname);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { addAvailableClip, addTextOverlay } = useVideoEditor();
+  const { addAvailableClip, addTextOverlay, addAudio } = useVideoEditor();
   const { setClipsView } = useSidePanel()!;
 
   if (!isProjectPage) {
@@ -56,7 +56,9 @@ export function Actions() {
 
   const handleAddImage = () => {};
 
-  const handleAddAudio = () => {};
+  const handleAddAudio = () => {
+    addAudio();
+  };
 
   const handleAddText = () => {
     addTextOverlay();
