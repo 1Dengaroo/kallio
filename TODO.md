@@ -3,8 +3,6 @@
 ### Video Editor
 
 - Add keyboard actions for delete, split, and duplicate timeline items
-- Add property config for audio files for speed and volume
-- Add property config for video files for speed and volume
 - Remove debug section in properties when done
 
 ### AI Editing
