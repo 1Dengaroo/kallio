@@ -32,7 +32,7 @@ export const DESKTOP_PLAYER_HEIGHT = 400;
 // Mobile composition and player dimensions (9:16 portrait)
 export const MOBILE_COMPOSITION_WIDTH = 1080;
 export const MOBILE_COMPOSITION_HEIGHT = 1920;
-export const MOBILE_PLAYER_WIDTH = 300;
+export const MOBILE_PLAYER_WIDTH = 285;
 export const MOBILE_PLAYER_HEIGHT = 500;
 
 // Default text overlay font size
