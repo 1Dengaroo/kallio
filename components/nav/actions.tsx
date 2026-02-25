@@ -64,12 +64,6 @@ export function Actions() {
 
   const actions = [
     {
-      name: 'Upload',
-      onClick: handleUploadClick,
-      icon: Upload,
-      tooltip: 'Upload a video file'
-    },
-    {
       name: 'Add Clip',
       onClick: handleAddClip,
       icon: Video,
