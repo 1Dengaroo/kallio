@@ -15,6 +15,7 @@ import {
   TIMELINE_OFFSET_X,
   TIMELINE_ROW_HEIGHT
 } from '@/constants';
+import { Clapperboard } from 'lucide-react';
 
 interface TimelineProps {}
 
@@ -104,6 +105,7 @@ export const Timeline: React.FC<TimelineProps> = () => {
                       <div className="h-10 bg-gradient-to-b from-muted to-muted/50 rounded-sm" />
                     </div>
                   ))}
+
                   {allTimelineItems.map((item, index) => (
                     <TimelineItem key={item.id} item={item} index={index} />
                   ))}

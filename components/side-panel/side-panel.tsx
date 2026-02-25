@@ -6,6 +6,7 @@ import { useSidePanel } from '@/context/side-panel-context';
 import { ClipsListContent } from './clips-list';
 import { PropertiesPanelContent } from './properties-panel';
 import { isTextOverlay, isAudio } from '@/types/guards';
+import { MousePointerClick } from 'lucide-react';
 
 export const SidePanel = () => {
   const { selectedItem } = useVideoEditor();
@@ -52,12 +53,17 @@ export const SidePanel = () => {
         ) : viewMode === 'properties' && selectedItem ? (
           <PropertiesPanelContent selectedItem={selectedItem} />
         ) : (
-          <div className="flex items-center justify-center h-full text-center text-muted-foreground p-4">
-            <div>
-              <p className="text-sm">No item selected</p>
-              <p className="text-xs mt-2">
-                Select a timeline item to edit properties
-              </p>
+          <div className="flex items-center justify-center h-full text-center p-6">
+            <div className="flex flex-col items-center gap-4 max-w-[200px]">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                <MousePointerClick className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">No item selected</p>
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                  Click on a clip or text overlay in the timeline to edit its properties
+                </p>
+              </div>
             </div>
           </div>
         )}

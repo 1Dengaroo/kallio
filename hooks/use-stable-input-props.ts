@@ -2,7 +2,6 @@ import { useRef, useEffect, useMemo, useCallback } from 'react';
 import type {
   Clip,
   TextOverlay,
-  TimelineItemType,
   ResizableItem,
   ResizableTimelineItem
 } from '@/types';
@@ -31,21 +30,15 @@ export function useStableInputProps() {
   const clipsRef = useRef(clips);
   const textOverlaysRef = useRef(textOverlays);
   const audioTracksRef = useRef(audioTracks);
-  const selectedItemRef = useRef(selectedItem);
-  const setSelectedItemRef = useRef(setSelectedItem);
   const updateResizableItemPropertiesRef = useRef(
     updateResizableItemProperties
   );
-  const onSelectItemRef = useRef(onSelectItem);
 
   useEffect(() => {
     clipsRef.current = clips;
     textOverlaysRef.current = textOverlays;
     audioTracksRef.current = audioTracks;
-    selectedItemRef.current = selectedItem;
-    setSelectedItemRef.current = setSelectedItem;
     updateResizableItemPropertiesRef.current = updateResizableItemProperties;
-    onSelectItemRef.current = onSelectItem;
   });
 
   return useMemo(
@@ -59,16 +52,13 @@ export function useStableInputProps() {
       get audioTracks() {
         return audioTracksRef.current;
       },
-      get selectedItem() {
-        return selectedItemRef.current;
-      },
-      setSelectedItem: (item: TimelineItemType | null) =>
-        setSelectedItemRef.current(item),
+      selectedItem,
+      setSelectedItem,
       updateResizableItemProperties: (
         item: ResizableItem,
         updates: Partial<Clip | TextOverlay>
       ) => updateResizableItemPropertiesRef.current(item, updates),
-      onSelectItem: (item: ResizableItem) => onSelectItemRef.current(item)
+      onSelectItem
     }),
     []
   );

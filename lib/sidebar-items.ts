@@ -77,16 +77,6 @@ const sidebarData = {
       name: 'Demo',
       url: '/projects/demo',
       icon: Frame
-    },
-    {
-      name: 'Demo 2',
-      url: '/projects/demo-2',
-      icon: PieChart
-    },
-    {
-      name: 'Demo 3',
-      url: '/projects/demo-3',
-      icon: Map
     }
   ],
   kallio: [

@@ -8,7 +8,6 @@ import {
 import { VideoPlayer } from '@/components/player';
 import { Timeline } from '@/components/timeline';
 import { SidePanel } from '@/components/side-panel';
-import { ChatPanel } from '@/components/chat';
 
 export default function Page() {
   return (
@@ -20,7 +19,7 @@ export default function Page() {
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={55}>
+        <ResizablePanel defaultSize={80}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={60} minSize={30}>
               <div className="bg-background h-full flex flex-col items-center justify-center">
@@ -34,12 +33,6 @@ export default function Page() {
               <Timeline />
             </ResizablePanel>
           </ResizablePanelGroup>
-        </ResizablePanel>
-
-        <ResizableHandle withHandle />
-
-        <ResizablePanel defaultSize={25} minSize={20} maxSize={40} collapsible>
-          <ChatPanel />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

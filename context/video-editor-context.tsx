@@ -19,7 +19,7 @@ import type {
 } from '@/types';
 import { PlayerRef } from '@remotion/player';
 import { DEFAULT_SCALE, DEFAULT_TEXT_FONT_SIZE } from '@/constants';
-import { DEFAULT_CLIPS } from '@/lib/sample';
+import { BIG_BUCK_BUNNY } from '@/lib/sample';
 import { isClip, isTextOverlay } from '@/types/guards';
 
 interface VideoEditorContextType {
@@ -105,8 +105,9 @@ export const VideoEditorProvider: React.FC<VideoEditorProviderProps> = ({
   const [selectedItem, setSelectedItem] = useState<TimelineItemType | null>(
     null
   );
-  const [availableClips, setAvailableClips] =
-    useState<UploadedClip[]>(DEFAULT_CLIPS);
+  const [availableClips, setAvailableClips] = useState<UploadedClip[]>([
+    BIG_BUCK_BUNNY
+  ]);
 
   const allTimelineItems = useMemo(
     () =>

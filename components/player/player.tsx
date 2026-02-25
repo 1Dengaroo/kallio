@@ -9,12 +9,14 @@ import { DEFAULT_FRAMERATE } from '@/constants';
 import { useKeyboardEvent } from '@/hooks/use-keyboard-event';
 import { useStableInputProps } from '@/hooks/use-stable-input-props';
 import { usePlayerDimensions } from '@/context/player-dimensions-context';
+import { Film } from 'lucide-react';
 
 export const VideoPlayer: React.FC = () => {
   const playerRef = useRef<PlayerRef>(null);
-  const { totalDuration, setPlayerRef } = useVideoEditor();
+  const { totalDuration, setPlayerRef, clips } = useVideoEditor();
   const { playerWidth, playerHeight, compositionWidth, compositionHeight } =
     usePlayerDimensions();
+  const hasContent = clips.length > 0;
 
   const component = useMemo(() => VideoComposition, []);
 
@@ -72,6 +74,23 @@ export const VideoPlayer: React.FC = () => {
           logLevel="trace"
           overflowVisible
         />
+
+        {/* Empty state overlay */}
+        {!hasContent && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
+            <div className="flex flex-col items-center gap-3 text-center p-6">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <Film className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">Your canvas awaits</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add a clip from the sidebar to start editing
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
